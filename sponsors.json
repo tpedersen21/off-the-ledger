@@ -1,0 +1,13 @@
+[
+  { "name": "Target",    "category": "Retail",            "address": "8350 Tamarack Village, Woodbury",       "lat": 44.9241, "lng": -92.9294, "color": "#CC0000", "initial": "T",  "url": "https://www.target.com" },
+  { "name": "Walmart",   "category": "Retail",            "address": "8909 Valley Creek Rd, Woodbury",        "lat": 44.9308, "lng": -92.9567, "color": "#0071CE", "initial": "W",  "url": "https://www.walmart.com" },
+  { "name": "Home Depot","category": "Retail",            "address": "8400 Tamarack Village, Woodbury",       "lat": 44.9235, "lng": -92.9307, "color": "#F96302", "initial": "HD", "url": "https://www.homedepot.com" },
+  { "name": "Aldi",      "category": "Retail",            "address": "1185 Radio Dr, Woodbury",               "lat": 44.9258, "lng": -92.9392, "color": "#00529B", "initial": "A",  "url": "https://www.aldi.us" },
+  { "name": "Target",    "category": "Retail",            "address": "7150 E Point Douglas Rd S, Cottage Grove","lat": 44.8245,"lng": -92.9271,"color": "#CC0000", "initial": "T",  "url": "https://www.target.com" },
+  { "name": "Walmart",   "category": "Retail",            "address": "19725 Freeport Ave, Forest Lake",       "lat": 45.2744, "lng": -92.9895, "color": "#0071CE", "initial": "W",  "url": "https://www.walmart.com" },
+  { "name": "Kwik Trip", "category": "Gas & Convenience", "address": "600 Radio Dr, Woodbury",                "lat": 44.9261, "lng": -92.9414, "color": "#DA291C", "initial": "KT", "url": "https://www.kwiktrip.com" },
+  { "name": "Kwik Trip", "category": "Gas & Convenience", "address": "8620 Hudson Rd, Woodbury",              "lat": 44.9197, "lng": -92.9223, "color": "#DA291C", "initial": "KT", "url": "https://www.kwiktrip.com" },
+  { "name": "Holiday",   "category": "Gas & Convenience", "address": "9025 Stillwater Blvd, Oakdale",         "lat": 45.0019, "lng": -92.9646, "color": "#E31837", "initial": "H",  "url": "" },
+  { "name": "Holiday",   "category": "Gas & Convenience", "address": "1750 Curve Crest Blvd, Stillwater",    "lat": 45.0534, "lng": -92.8301, "color": "#E31837", "initial": "H",  "url": "" },
+  { "name": "Kwik Trip", "category": "Gas & Convenience", "address": "200 N Greeley St, Stillwater",          "lat": 45.0612, "lng": -92.8088, "color": "#DA291C", "initial": "KT", "url": "https://www.kwiktrip.com" }
+]

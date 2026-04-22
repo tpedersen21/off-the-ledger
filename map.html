@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Washington County Map · Off The Ledger</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Fraunces", Georgia, serif;
+  background: #16140f;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#map {
+  position: fixed;
+  inset: 0;
+  top: 52px;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  height: 52px;
+  background: rgba(22, 20, 15, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(241, 235, 220, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.header-back {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(241, 235, 220, 0.5);
+  text-decoration: none;
+  transition: color 0.12s;
+  white-space: nowrap;
+}
+.header-back:hover { color: #f1ebdc; }
+
+.header-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(241, 235, 220, 0.15);
+}
+
+.header-title {
+  color: #f1ebdc;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+}
+.header-title em {
+  font-style: italic;
+  color: #a51f1c;
+  font-weight: 500;
+}
+
+.header-sub {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(241, 235, 220, 0.35);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ---------- MARKERS ---------- */
+.sponsor-marker {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: "JetBrains Mono", monospace;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  transition: transform 0.12s, box-shadow 0.12s;
+  letter-spacing: 0;
+  user-select: none;
+}
+.sponsor-marker:hover {
+  transform: scale(1.18);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+}
+
+/* ---------- POPUP ---------- */
+.mapboxgl-popup-content {
+  font-family: "Fraunces", serif;
+  background: #f1ebdc;
+  border: 1px solid #2a251c;
+  border-radius: 0;
+  padding: 16px 18px 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  min-width: 190px;
+}
+.mapboxgl-popup-close-button {
+  color: #75705f;
+  font-size: 20px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.mapboxgl-popup-close-button:hover { color: #a51f1c; background: transparent; }
+.mapboxgl-popup-tip { border-top-color: #2a251c !important; }
+
+.popup-category {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #a51f1c;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.popup-name {
+  font-weight: 700;
+  font-size: 18px;
+  color: #16140f;
+  line-height: 1.1;
+  margin-bottom: 5px;
+  font-variation-settings: "opsz" 24;
+}
+.popup-address {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: #75705f;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.popup-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #f1ebdc;
+  background: #16140f;
+  padding: 7px 12px;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 700;
+  transition: background 0.12s;
+}
+.popup-link:hover { background: #a51f1c; }
+
+/* ---------- MAPBOX OVERRIDES ---------- */
+.mapboxgl-ctrl-group {
+  border-radius: 0 !important;
+  border: 1px solid rgba(241, 235, 220, 0.2) !important;
+  background: rgba(22, 20, 15, 0.85) !important;
+}
+.mapboxgl-ctrl-group button {
+  border-radius: 0 !important;
+}
+.mapboxgl-ctrl-group button .mapboxgl-ctrl-icon {
+  filter: invert(0.85);
+}
+.mapboxgl-ctrl-attrib {
+  background: rgba(22, 20, 15, 0.7) !important;
+  color: rgba(241,235,220,0.5) !important;
+}
+.mapboxgl-ctrl-attrib a { color: rgba(241,235,220,0.5) !important; }
+.mapboxgl-ctrl-scale {
+  background: rgba(22, 20, 15, 0.7) !important;
+  color: rgba(241,235,220,0.7) !important;
+  border-color: rgba(241,235,220,0.3) !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-back" href="/">← Ledger</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Off <em>The Ledger</em></div>
+  <div class="header-sub">Washington County · Sponsor Map</div>
+</header>
+
+<div id="map"></div>
+
+<script>
+mapboxgl.accessToken = "pk.eyJ1IjoidHBlZGVyc2VuMjEiLCJhIjoiY21vYWk3Z3NtMDczZzJ5cHRxcTN3dGpkMiJ9.L1Rv7yGHB_7eHUOIUmlNNQ";
+
+const map = new mapboxgl.Map({
+  container: "map",
+  style: "mapbox://styles/mapbox/satellite-streets-v12",
+  center: [-92.89, 44.97],
+  zoom: 10.5,
+  pitch: 45,
+  bearing: -15,
+  antialias: true,
+});
+
+map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "bottom-right");
+map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
+map.addControl(new mapboxgl.ScaleControl({ unit: "imperial" }), "bottom-left");
+
+map.on("load", () => {
+  map.addSource("mapbox-dem", {
+    type: "raster-dem",
+    url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+    tileSize: 512,
+    maxzoom: 14,
+  });
+  map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
+
+  map.addLayer({
+    id: "sky",
+    type: "sky",
+    paint: {
+      "sky-type": "atmosphere",
+      "sky-atmosphere-sun": [0.0, 0.0],
+      "sky-atmosphere-sun-intensity": 15,
+    },
+  });
+
+  fetch("/sponsors.json")
+    .then(r => r.json())
+    .then(sponsors => {
+      sponsors.forEach(s => {
+        const el = document.createElement("div");
+        el.className = "sponsor-marker";
+        el.style.background = s.color;
+        el.textContent = s.initial;
+
+        const popup = new mapboxgl.Popup({ offset: 22, closeButton: true, maxWidth: "260px" })
+          .setHTML(`
+            <div class="popup-category">${escHtml(s.category)}</div>
+            <div class="popup-name">${escHtml(s.name)}</div>
+            <div class="popup-address">${escHtml(s.address)}</div>
+            ${s.url ? `<a class="popup-link" href="${escHtml(s.url)}" target="_blank" rel="noopener">Visit site →</a>` : ""}
+          `);
+
+        new mapboxgl.Marker({ element: el, anchor: "center" })
+          .setLngLat([s.lng, s.lat])
+          .setPopup(popup)
+          .addTo(map);
+      });
+    })
+    .catch(e => console.warn("sponsors.json failed to load", e));
+});
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+</script>
+</body>
+</html>
