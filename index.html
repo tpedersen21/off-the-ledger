@@ -196,6 +196,7 @@ main {
   .tabs { margin: 10px 0 12px; }
   .tab { padding: 7px 12px; font-size: 10px; }
   .hero-stats .stat { padding: 16px 12px 18px; }
+  .mob-br { display: block; height: 0; }
 }
 
 /* ------------- SECTION ------------- */
@@ -1483,7 +1484,7 @@ footer .exclusions {
 
   <!-- Masthead -->
   <header class="masthead">
-    <h1>Washington County <em>Incident Ledger</em></h1>
+    <h1>Washington County <span class="mob-br"></span><em>Incident Ledger</em></h1>
     <div class="mast-meta">
       <span>Vol. I</span>
       <span>No. <strong id="weekNumber">—</strong></span>
@@ -1768,7 +1769,7 @@ footer .exclusions {
   if (window.__noData || !window.CRIME_DATA) {
     main.innerHTML = `
       <header class="masthead">
-        <h1>Washington County <em>Incident Ledger</em></h1>
+        <h1>Washington County <span class="mob-br"></span><em>Incident Ledger</em></h1>
         <div class="mast-meta"><span>No Data Loaded</span></div>
       </header>
       <div class="empty">
@@ -2148,7 +2149,7 @@ footer .exclusions {
     // Preserve the time window if one was set
     const currentWindow = url.searchParams.get("window");
     url.search = "";
-    if (currentWindow) url.searchParams.set("window", currentWindow);
+    if (currentWindow && !params.city && !params.category) url.searchParams.set("window", currentWindow);
     for (const [k, v] of Object.entries(params)) {
       if (v) url.searchParams.set(k, v);
     }
