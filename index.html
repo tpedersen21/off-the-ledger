@@ -1724,7 +1724,7 @@ footer .exclusions {
   const urlParams = new URLSearchParams(window.location.search);
   const filterCity = urlParams.get("city");
   const filterCategory = urlParams.get("category");
-  const windowParam = urlParams.get("window") || "90d";
+  const windowParam = urlParams.get("window") || "all";
   const availableWindows = (D.windows || {});
   // Start with the windowed base, fall back to full dataset for "all" or if missing
   const windowBase = (windowParam !== "all" && availableWindows[windowParam])
@@ -1906,9 +1906,10 @@ footer .exclusions {
   /* ------------- RECENT TABLE (last 7 days, raw feed) ------------- */
   const body = document.getElementById("recentBody");
   const recent = view.recent || [];
-  document.getElementById("recentKicker").textContent = `Raw Source Data · ${recent.length} entries`;
+  const recentCapped = recent.slice(0, 20);
+  document.getElementById("recentKicker").textContent = `Raw Source Data · ${recentCapped.length < recent.length ? `${recentCapped.length} of ${recent.length}` : recent.length} entries`;
   const hot = new Set(["Robbery","Assault","Homicide","Weapons","Arson","Burglary"]);
-  recent.forEach(r => {
+  recentCapped.forEach(r => {
     const tr = document.createElement("tr");
     tr.classList.add("clickable");
     const hotCls = hot.has(r.category) ? " hot" : "";
@@ -2457,13 +2458,14 @@ footer .exclusions {
   function drawRecentTheft(rows) {
     const body = document.getElementById("recentTheftBody");
     if (!body) return;
+    const theftCapped = rows.slice(0, 20);
     document.getElementById("recentTheftKicker").textContent =
-      `Retail And Property Theft · ${rows.length} entries`;
+      `Retail And Property Theft · ${theftCapped.length < rows.length ? `${theftCapped.length} of ${rows.length}` : rows.length} entries`;
     if (rows.length === 0) {
       body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No theft incidents in the most recent 30 days of data.</td></tr>`;
       return;
     }
-    rows.forEach(r => {
+    theftCapped.forEach(r => {
       const tr = document.createElement("tr");
       tr.classList.add("clickable");
       tr.innerHTML = `
@@ -2480,18 +2482,18 @@ footer .exclusions {
   function drawRecentSerious(rows) {
     const body = document.getElementById("recentSeriousBody");
     if (!body) return;
+    const seriousCapped = rows.slice(0, 20);
     document.getElementById("recentSeriousKicker").textContent =
-      `Off The Ledger · Index Crimes · ${rows.length} entries`;
+      `Off The Ledger · Index Crimes · ${seriousCapped.length < rows.length ? `${seriousCapped.length} of ${rows.length}` : rows.length} entries`;
     if (rows.length === 0) {
       body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No qualifying incidents in the most recent 30 days of data.</td></tr>`;
       return;
     }
-    // Categories that get the red "hot" tag
     const offLedger = new Set(["Suicide / Suicidal",
                                "CPS Referral", "MAARC", "Domestic Violence"]);
     const indexHot = new Set(["Homicide", "Kidnapping", "Robbery", "Assault",
                               "Burglary", "Arson", "Sex Offense"]);
-    rows.forEach(r => {
+    seriousCapped.forEach(r => {
       const isLeak = offLedger.has(r.category);
       const isHot = isLeak || indexHot.has(r.category);
       const hotCls = isHot ? " hot" : "";
