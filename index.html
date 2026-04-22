@@ -1377,6 +1377,19 @@ table.recent {
   align-items: baseline;
   counter-increment: blockc;
 }
+@media (max-width: 640px) {
+  .blocks li {
+    grid-template-columns: 28px 1fr 46px;
+    grid-template-rows: auto auto;
+    grid-template-areas: "num loc cnt" ". city cnt";
+    gap: 4px 10px;
+    align-items: start;
+  }
+  .blocks li::before { grid-area: num; padding-top: 3px; }
+  .blocks .b-loc { grid-area: loc; }
+  .blocks .b-city { grid-area: city; font-size: 10px; margin-top: 0; padding-bottom: 2px; text-align: left; }
+  .blocks .b-count { grid-area: cnt; text-align: right; padding-top: 3px; }
+}
 .blocks li::before {
   content: counter(blockc, decimal-leading-zero);
   font-family: "JetBrains Mono", monospace;
