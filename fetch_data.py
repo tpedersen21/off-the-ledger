@@ -1071,8 +1071,15 @@ def aggregate(all_rows):
     # so we prorate: (current total / days elapsed) * 365.
     yoy = []
     years = sorted(set(r["date"][:4] for r in all_rows))
-    if len(years) >= 2:
+    current_year = str(last_dt.year)
+    complete_years = [y for y in years if y < current_year]
+    if len(complete_years) >= 2:
+        yr_prev, yr_curr = complete_years[-2], complete_years[-1]
+    elif len(years) >= 2:
         yr_prev, yr_curr = years[-2], years[-1]
+    else:
+        yr_prev, yr_curr = None, None
+    if yr_prev and yr_curr:
         prev_cat_counts = defaultdict(int)
         curr_cat_counts = defaultdict(int)
 
