@@ -1901,7 +1901,10 @@ footer .exclusions {
   document.getElementById("weekNumber").textContent = String(view.byWeek?.length || 0).padStart(3, "0");
   document.getElementById("coverageRange").textContent = `${view.firstDate || globalMeta.firstDate} → ${view.lastDate || globalMeta.lastDate}`;
   document.getElementById("lastUpdate").textContent = globalMeta.generated.slice(0,10);
-  document.getElementById("genStamp").textContent = globalMeta.generated.replace("T"," ").slice(0,19) + " UTC";
+  document.getElementById("genStamp").textContent = new Date(globalMeta.generated).toLocaleString("en-US", {
+    timeZone: "America/Chicago", month: "short", day: "numeric", year: "numeric",
+    hour: "numeric", minute: "2-digit", hour12: true, timeZoneName: "short"
+  });
 
   /* ------------- CONDITIONAL SECTION VISIBILITY ------------- */
   // In city-locked view, hide By City (we're already filtered to one)
