@@ -207,11 +207,11 @@ mapboxgl.accessToken = "pk.eyJ1IjoidHBlZGVyc2VuMjEiLCJhIjoiY21vYWk3Z3NtMDczZzJ5c
 
 const map = new mapboxgl.Map({
   container: "map",
-  style: "mapbox://styles/mapbox/satellite-streets-v12",
+  style: "mapbox://styles/mapbox/light-v11",
   center: [-92.89, 44.97],
   zoom: 10.5,
-  pitch: 45,
-  bearing: -15,
+  pitch: 0,
+  bearing: 0,
   antialias: true,
 });
 
@@ -220,24 +220,6 @@ map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
 map.addControl(new mapboxgl.ScaleControl({ unit: "imperial" }), "bottom-left");
 
 map.on("load", () => {
-  map.addSource("mapbox-dem", {
-    type: "raster-dem",
-    url: "mapbox://mapbox.mapbox-terrain-dem-v1",
-    tileSize: 512,
-    maxzoom: 14,
-  });
-  map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
-
-  map.addLayer({
-    id: "sky",
-    type: "sky",
-    paint: {
-      "sky-type": "atmosphere",
-      "sky-atmosphere-sun": [0.0, 0.0],
-      "sky-atmosphere-sun-intensity": 15,
-    },
-  });
-
   fetch("/sponsors.json")
     .then(r => r.json())
     .then(sponsors => {
