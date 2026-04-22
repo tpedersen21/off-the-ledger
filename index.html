@@ -30,6 +30,7 @@
 <meta name="twitter:description" content="Washington County incident ledger.">
 <meta name="twitter:image" content="https://offtheledger.netlify.app/og-image.png">
 
+<link rel="preload" href="data.js" as="script">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -122,31 +123,72 @@ main {
   letter-spacing: 0.12em;
   color: var(--ink-soft);
 }
-.map-ticker {
-  display: block;
-  overflow: hidden;
-  margin-top: 12px;
+.masthead-nav {
+  display: flex;
+  margin-top: 14px;
   border-top: 1px solid var(--rule);
-  padding: 5px 0 2px;
-  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
 }
-.map-ticker-track {
-  display: inline-block;
-  white-space: nowrap;
-  animation: ticker 120s linear infinite;
+.masthead-nav-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
   font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--red);
+  border-right: 1px solid var(--rule);
+  transition: background 0.12s;
+}
+.masthead-nav-btn:last-child { border-right: none; }
+.masthead-nav-btn:hover { background: rgba(22,20,15,0.04); }
+.masthead-nav-btn--dc { color: var(--ink-muted); }
+.masthead-tagline {
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.45;
+  margin: 0;
+  padding: 16px 0 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.otl-teaser {
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--red);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.otl-teaser p {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-soft);
+  flex: 1;
+}
+.otl-teaser-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--red);
+  text-decoration: none;
+  white-space: nowrap;
 }
-.map-ticker:hover .map-ticker-track { animation-play-state: paused; }
-.map-ticker--dc .map-ticker-track { color: var(--ink-muted); animation-duration: 95s; }
-@keyframes ticker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+.otl-teaser-link:hover { text-decoration: underline; }
 .mast-meta span strong {
   color: var(--ink);
   font-weight: 700;
@@ -1493,13 +1535,12 @@ footer .exclusions {
       <span>Last Update <strong id="lastUpdate">—</strong></span>
       <span>Source <strong>WCSO Open Data</strong></span>
     </div>
-    <a href="/map" class="map-ticker" aria-label="View county map">
-      <div class="map-ticker-track">CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; CRIME MAP &middot; </div>
-    </a>
-    <a href="/datacenters" class="map-ticker map-ticker--dc" aria-label="View data centers tracker">
-      <div class="map-ticker-track">DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; </div>
-    </a>
+    <nav class="masthead-nav">
+      <a href="/map" class="masthead-nav-btn">Crime Map &rarr;</a>
+      <a href="/datacenters" class="masthead-nav-btn masthead-nav-btn--dc">Data Centers &rarr;</a>
+    </nav>
   </header>
+  <p class="masthead-tagline">Two years of Washington County sheriff incident data, including categories the county strips from its public feed.</p>
 
   <!-- Hero stats -->
   <div class="hero-stats" id="heroStats">
@@ -1507,6 +1548,12 @@ footer .exclusions {
     <div class="stat"><div class="stat-num" id="weekCount">—</div><div class="stat-label">Weeks Of Data</div></div>
     <div class="stat"><div class="stat-num accent" id="lastWeekCount">—</div><div class="stat-label">Most Recent Week</div></div>
     <div class="stat"><div class="stat-num" id="avgWeek">—</div><div class="stat-label">Weekly Average</div></div>
+  </div>
+
+  <!-- Off The Ledger teaser -->
+  <div class="otl-teaser">
+    <p>The county strips certain incident categories before publishing. They appear in the data anyway.</p>
+    <a href="#sec-leaks" class="otl-teaser-link">See what&rsquo;s off the ledger &rarr;</a>
   </div>
 
   <!-- Filter strip -->
