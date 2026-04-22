@@ -149,16 +149,6 @@ main {
 .masthead-nav-btn:last-child { border-right: none; }
 .masthead-nav-btn:hover { background: rgba(22,20,15,0.04); }
 .masthead-nav-btn--dc { color: var(--ink-muted); }
-.masthead-tagline {
-  font-family: "Fraunces", serif;
-  font-size: 15px;
-  font-style: italic;
-  color: var(--ink-soft);
-  line-height: 1.45;
-  margin: 0;
-  padding: 16px 0 18px;
-  border-bottom: 1px solid var(--rule);
-}
 .otl-teaser {
   margin: 22px 0 0;
   padding: 14px 16px;
@@ -239,7 +229,6 @@ main {
   .tab { padding: 7px 12px; font-size: 10px; }
   .hero-stats .stat { padding: 16px 12px 18px; }
   .masthead h1 { font-size: 44px; }
-  .mob-br { display: block; height: 0; }
 }
 
 /* ------------- SECTION ------------- */
@@ -1527,7 +1516,7 @@ footer .exclusions {
 
   <!-- Masthead -->
   <header class="masthead">
-    <h1>Washington County <span class="mob-br"></span><em>Incident Ledger</em></h1>
+    <h1>Washington County <br><em>Incident Ledger</em></h1>
     <div class="mast-meta">
       <span>Vol. I</span>
       <span>No. <strong id="weekNumber">—</strong></span>
@@ -1540,7 +1529,6 @@ footer .exclusions {
       <a href="/datacenters" class="masthead-nav-btn masthead-nav-btn--dc">Data Centers &rarr;</a>
     </nav>
   </header>
-  <p class="masthead-tagline">Two years of Washington County sheriff incident data, including categories the county strips from its public feed.</p>
 
   <!-- Hero stats -->
   <div class="hero-stats" id="heroStats">
@@ -1817,7 +1805,7 @@ footer .exclusions {
   if (window.__noData || !window.CRIME_DATA) {
     main.innerHTML = `
       <header class="masthead">
-        <h1>Washington County <span class="mob-br"></span><em>Incident Ledger</em></h1>
+        <h1>Washington County <br><em>Incident Ledger</em></h1>
         <div class="mast-meta"><span>No Data Loaded</span></div>
       </header>
       <div class="empty">
@@ -1900,7 +1888,7 @@ footer .exclusions {
   /* ------------- MASTHEAD ------------- */
   const h1 = document.querySelector(".masthead h1");
   if (viewMode === "city") {
-    h1.innerHTML = `${escapeHtml(viewName)} <em>Incident Ledger</em>`;
+    h1.innerHTML = `${escapeHtml(viewName)}<br><em>Incident Ledger</em>`;
     document.title = `${viewName} Incident Ledger`;
   } else if (viewMode === "category") {
     h1.innerHTML = `<em>${escapeHtml(viewName)}</em> &middot; Washington County`;
