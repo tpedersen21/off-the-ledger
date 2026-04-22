@@ -1540,7 +1540,7 @@ footer .exclusions {
       </div>
     </div>
     <div class="tab-panel" data-panel="raw">
-      <div class="tab-panel-kicker" id="recentKicker">Raw Source Data</div>
+      <div class="tab-panel-kicker" id="recentKicker">Recent Incidents</div>
       <div class="recent-wrap">
         <table class="recent">
           <thead>
@@ -1576,10 +1576,10 @@ footer .exclusions {
     </p>
   </section>
 
-  <!-- Section: By The Numbers -->
+  <!-- Section: Stats -->
   <section id="sec-notable">
     <div class="section-head">
-      <h2>By The Numbers</h2>
+      <h2>Stats</h2>
       <span class="kicker">All-Time Observations &middot; Not Window-Scoped</span>
     </div>
 
@@ -1934,7 +1934,7 @@ footer .exclusions {
 
   /* ------------- RECENT TABLE (7 days global, 30 days when filtered) ------------- */
   const recent = (viewMode !== "global" ? (view.recent30 || view.recent) : view.recent) || [];
-  const recentLabel = viewMode !== "global" ? "Last 30 Days" : "Raw Source Data";
+  const recentLabel = viewMode !== "global" ? "Last 30 Days" : "Recent Incidents";
   const hotRaw = new Set(["Robbery","Assault","Homicide","Weapons","Arson","Burglary"]);
   attachPagination(
     recent,
