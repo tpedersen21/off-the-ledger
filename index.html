@@ -1777,11 +1777,7 @@ footer .exclusions {
     }
     btn.addEventListener("click", () => {
       const url = new URL(window.location);
-      if (w === "all") {
-        url.searchParams.delete("window");
-      } else {
-        url.searchParams.set("window", w);
-      }
+      url.searchParams.set("window", w);
       // Preserve existing city/category filter
       window.location.href = url.toString();
     });
