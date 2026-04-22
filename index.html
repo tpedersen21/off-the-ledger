@@ -2493,9 +2493,17 @@ footer .exclusions {
                                "CPS Referral", "MAARC", "Domestic Violence"]);
     const indexHot = new Set(["Homicide", "Kidnapping", "Robbery", "Assault",
                               "Burglary", "Arson", "Sex Offense"]);
+    const _shootingKw = ["shots fired", "shots heard", "shooting"];
     seriousCapped.forEach(r => {
       const isLeak = offLedger.has(r.category);
-      const isHot = isLeak || indexHot.has(r.category);
+      const t = (r.type || "").toLowerCase();
+      const isShooting = r.category === "Weapons" &&
+        _shootingKw.some(kw => t.includes(kw));
+      const isTerroristic = r.category === "Threat" && t.includes("terroristic");
+      const isOFP = r.category === "Order Violation";
+      const isStalking = r.category === "Harassment" && t.includes("stalking");
+      const isHot = isLeak || indexHot.has(r.category) || isShooting ||
+                    isTerroristic || isOFP || isStalking;
       const hotCls = isHot ? " hot" : "";
       const tr = document.createElement("tr");
       tr.classList.add("clickable");

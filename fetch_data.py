@@ -803,12 +803,20 @@ def _aggregate_one(rows, ctx):
 
     serious_cats_excluding_theft = ctx["serious_cats"] - {"Theft"}
     _shooting_keywords = ("shots fired", "shots heard", "shooting")
+    _ofp_keywords = ("ofp violation", "hro violation", "danco", "no contact order",
+                     "protection order")
     def _is_serious(r):
         if r["category"] in serious_cats_excluding_theft:
             return True
+        t = (r.get("type") or "").lower()
         if r["category"] == "Weapons":
-            t = (r.get("type") or "").lower()
             return any(kw in t for kw in _shooting_keywords)
+        if r["category"] == "Threat" and "terroristic" in t:
+            return True
+        if r["category"] == "Order Violation":
+            return any(kw in t for kw in _ofp_keywords)
+        if r["category"] == "Harassment" and "stalking" in t:
+            return True
         return False
     recent_serious = [r for r in rows
                       if r["date"] >= ctx["serious_cutoff"] and _is_serious(r)]
