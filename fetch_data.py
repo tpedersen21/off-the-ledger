@@ -1083,13 +1083,15 @@ def aggregate(all_rows):
         prev_cat_counts = defaultdict(int)
         curr_cat_counts = defaultdict(int)
 
-        # Determine how many days of the current year we actually have data for
         curr_year_int = int(yr_curr)
         year_start = datetime(curr_year_int, 1, 1).date()
-        days_elapsed = (last_dt - year_start).days + 1
-        if days_elapsed < 1:
-            days_elapsed = 1
-        pace_factor = 365.0 / days_elapsed
+        year_end = datetime(curr_year_int, 12, 31).date()
+        if yr_curr < current_year:
+            # Complete year — use actual days in that year (365 or 366)
+            days_elapsed = (year_end - year_start).days + 1
+        else:
+            days_elapsed = max(1, (last_dt - year_start).days + 1)
+        pace_factor = ((year_end - year_start).days + 1) / days_elapsed
 
         for r in all_rows:
             yr = r["date"][:4]
