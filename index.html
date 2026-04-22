@@ -958,6 +958,23 @@ section { margin-top: 56px; }
 
 /* ------------- RECENT TABLE ------------- */
 .recent-wrap { overflow-x: auto; }
+.load-more-btn {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 11px 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--rule);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.load-more-btn:hover { color: var(--red); }
 table.recent {
   width: 100%;
   border-collapse: collapse;
@@ -1904,28 +1921,27 @@ footer .exclusions {
   }
 
   /* ------------- RECENT TABLE (7 days global, 30 days when filtered) ------------- */
-  const body = document.getElementById("recentBody");
   const recent = (viewMode !== "global" ? (view.recent30 || view.recent) : view.recent) || [];
-  const recentCapped = recent.slice(0, 20);
   const recentLabel = viewMode !== "global" ? "Last 30 Days" : "Raw Source Data";
-  document.getElementById("recentKicker").textContent = `${recentLabel} · ${recentCapped.length < recent.length ? `${recentCapped.length} of ${recent.length}` : recent.length} entries`;
-  const hot = new Set(["Robbery","Assault","Homicide","Weapons","Arson","Burglary"]);
-  recentCapped.forEach(r => {
-    const tr = document.createElement("tr");
-    tr.classList.add("clickable");
-    const hotCls = hot.has(r.category) ? " hot" : "";
-    tr.innerHTML = `
-      <td class="date">${r.date}</td>
-      <td class="city">${escapeHtml(r.city)}</td>
-      <td class="cat"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
-      <td class="type">${escapeHtml(r.type)}</td>
-      <td class="loc">${escapeHtml(r.location || "")}</td>`;
-    tr.addEventListener("click", () => openModal(r));
-    body.appendChild(tr);
-  });
-  if (recent.length === 0) {
-    body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No incidents in the most recent week of data.</td></tr>`;
-  }
+  const hotRaw = new Set(["Robbery","Assault","Homicide","Weapons","Arson","Burglary"]);
+  attachPagination(
+    recent,
+    document.getElementById("recentBody"),
+    r => {
+      const tr = document.createElement("tr");
+      tr.classList.add("clickable");
+      const hotCls = hotRaw.has(r.category) ? " hot" : "";
+      tr.innerHTML = `
+        <td class="date">${r.date}</td>
+        <td class="city">${escapeHtml(r.city)}</td>
+        <td class="cat"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
+        <td class="type">${escapeHtml(r.type)}</td>
+        <td class="loc">${escapeHtml(r.location || "")}</td>`;
+      tr.addEventListener("click", () => openModal(r));
+      return tr;
+    },
+    "recentKicker", recentLabel, "No incidents in the most recent week of data."
+  );
 
   /* ------------- LINE CHART ------------- */
   drawWeeklyChart(view.byWeek || []);
@@ -2034,6 +2050,41 @@ footer .exclusions {
   });
 
   /* ------------- Helpers ------------- */
+  function attachPagination(allRows, tbody, renderRow, kickerId, labelPrefix, emptyMsg) {
+    let offset = 0;
+    const BATCH = 20;
+    function renderBatch() {
+      const batch = allRows.slice(offset, offset + BATCH);
+      batch.forEach(r => tbody.appendChild(renderRow(r)));
+      offset += batch.length;
+      const kickerEl = document.getElementById(kickerId);
+      if (kickerEl) {
+        kickerEl.textContent = `${labelPrefix} · ${offset < allRows.length ? `${offset} of ${allRows.length}` : allRows.length} entries`;
+      }
+      const wrap = tbody.closest(".recent-wrap");
+      let btn = wrap && wrap.nextElementSibling && wrap.nextElementSibling.classList.contains("load-more-btn")
+                ? wrap.nextElementSibling : null;
+      if (offset >= allRows.length) {
+        if (btn) btn.remove();
+      } else {
+        if (!btn) {
+          btn = document.createElement("button");
+          btn.className = "load-more-btn";
+          btn.addEventListener("click", renderBatch);
+          wrap.insertAdjacentElement("afterend", btn);
+        }
+        btn.textContent = `Load ${Math.min(BATCH, allRows.length - offset)} more · ${allRows.length - offset} remaining`;
+      }
+    }
+    if (allRows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">${emptyMsg}</td></tr>`;
+      const kickerEl = document.getElementById(kickerId);
+      if (kickerEl) kickerEl.textContent = `${labelPrefix} · 0 entries`;
+    } else {
+      renderBatch();
+    }
+  }
+
   function escapeHtml(s) {
     return (s || "").replace(/[&<>"']/g, c => ({
       "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
@@ -2477,64 +2528,54 @@ footer .exclusions {
   function drawRecentTheft(rows) {
     const body = document.getElementById("recentTheftBody");
     if (!body) return;
-    const theftCapped = rows.slice(0, 20);
-    document.getElementById("recentTheftKicker").textContent =
-      `Retail And Property Theft · ${theftCapped.length < rows.length ? `${theftCapped.length} of ${rows.length}` : rows.length} entries`;
-    if (rows.length === 0) {
-      body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No theft incidents in the most recent 30 days of data.</td></tr>`;
-      return;
-    }
-    theftCapped.forEach(r => {
-      const tr = document.createElement("tr");
-      tr.classList.add("clickable");
-      tr.innerHTML = `
-        <td class="date">${r.date}</td>
-        <td class="city">${escapeHtml(r.city)}</td>
-        <td class="cat"><span class="tag">${escapeHtml(r.category)}</span></td>
-        <td class="type">${escapeHtml(r.type)}</td>
-        <td class="loc">${escapeHtml(r.location || "")}</td>`;
-      tr.addEventListener("click", () => openModal(r));
-      body.appendChild(tr);
-    });
+    attachPagination(
+      rows, body,
+      r => {
+        const tr = document.createElement("tr");
+        tr.classList.add("clickable");
+        tr.innerHTML = `
+          <td class="date">${r.date}</td>
+          <td class="city">${escapeHtml(r.city)}</td>
+          <td class="cat"><span class="tag">${escapeHtml(r.category)}</span></td>
+          <td class="type">${escapeHtml(r.type)}</td>
+          <td class="loc">${escapeHtml(r.location || "")}</td>`;
+        tr.addEventListener("click", () => openModal(r));
+        return tr;
+      },
+      "recentTheftKicker", "Retail And Property Theft",
+      "No theft incidents in the most recent 30 days of data."
+    );
   }
 
   function drawRecentSerious(rows) {
     const body = document.getElementById("recentSeriousBody");
     if (!body) return;
-    const seriousCapped = rows.slice(0, 20);
-    document.getElementById("recentSeriousKicker").textContent =
-      `Off The Ledger · Index Crimes · ${seriousCapped.length < rows.length ? `${seriousCapped.length} of ${rows.length}` : rows.length} entries`;
-    if (rows.length === 0) {
-      body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No qualifying incidents in the most recent 30 days of data.</td></tr>`;
-      return;
-    }
-    const offLedger = new Set(["Suicide / Suicidal",
-                               "CPS Referral", "MAARC", "Domestic Violence"]);
-    const indexHot = new Set(["Homicide", "Kidnapping", "Robbery", "Assault",
-                              "Burglary", "Arson", "Sex Offense"]);
-    const _shootingKw = ["shots fired", "shots heard", "shooting"];
-    seriousCapped.forEach(r => {
-      const isLeak = offLedger.has(r.category);
-      const t = (r.type || "").toLowerCase();
-      const isShooting = r.category === "Weapons" &&
-        _shootingKw.some(kw => t.includes(kw));
-      const isTerroristic = r.category === "Threat" && t.includes("terroristic");
-      const isOFP = r.category === "Order Violation";
-      const isStalking = r.category === "Harassment" && t.includes("stalking");
-      const isHot = isLeak || indexHot.has(r.category) || isShooting ||
-                    isTerroristic || isOFP || isStalking;
-      const hotCls = isHot ? " hot" : "";
-      const tr = document.createElement("tr");
-      tr.classList.add("clickable");
-      tr.innerHTML = `
-        <td class="date">${r.date}</td>
-        <td class="city">${escapeHtml(r.city)}</td>
-        <td class="cat"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
-        <td class="type">${escapeHtml(r.type)}</td>
-        <td class="loc">${escapeHtml(r.location || "")}</td>`;
-      tr.addEventListener("click", () => openModal(r));
-      body.appendChild(tr);
-    });
+    const offLedger = new Set(["Suicide / Suicidal", "CPS Referral", "MAARC", "Domestic Violence"]);
+    const indexHot = new Set(["Homicide", "Kidnapping", "Robbery", "Assault", "Burglary", "Arson", "Sex Offense"]);
+    const shootingKw = ["shots fired", "shots heard", "shooting"];
+    attachPagination(
+      rows, body,
+      r => {
+        const t = (r.type || "").toLowerCase();
+        const isHot = offLedger.has(r.category) || indexHot.has(r.category) ||
+          (r.category === "Weapons" && shootingKw.some(kw => t.includes(kw))) ||
+          (r.category === "Threat" && t.includes("terroristic")) ||
+          r.category === "Order Violation" ||
+          (r.category === "Harassment" && t.includes("stalking"));
+        const tr = document.createElement("tr");
+        tr.classList.add("clickable");
+        tr.innerHTML = `
+          <td class="date">${r.date}</td>
+          <td class="city">${escapeHtml(r.city)}</td>
+          <td class="cat"><span class="tag${isHot ? " hot" : ""}">${escapeHtml(r.category)}</span></td>
+          <td class="type">${escapeHtml(r.type)}</td>
+          <td class="loc">${escapeHtml(r.location || "")}</td>`;
+        tr.addEventListener("click", () => openModal(r));
+        return tr;
+      },
+      "recentSeriousKicker", "Off The Ledger · Index Crimes",
+      "No qualifying incidents in the most recent 30 days of data."
+    );
   }
 
   function drawLeaks(tiered) {
