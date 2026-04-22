@@ -1013,10 +1013,8 @@ def aggregate(all_rows):
     # Specific event codes - the interesting long-tail entries
     # that deserve their own callout when they happen
     days_since_raw_codes = [
-        "PROSTITUTION",
         "CHILD EXPLOITATION",
         "INDECENT EXPOSURE",
-        "ROAD RAGE",
         "HUMAN TRAFFICKING",
         "BOMB THREAT",
         "STALKING",
