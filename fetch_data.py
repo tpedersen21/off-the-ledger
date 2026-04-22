@@ -801,6 +801,9 @@ def _aggregate_one(rows, ctx):
     recent = [r for r in rows if r["date"] >= ctx["recent_cutoff"]]
     recent.sort(key=lambda r: (r["date"], r.get("hour") or 0), reverse=True)
 
+    recent30 = [r for r in rows if r["date"] >= ctx["serious_cutoff"]]
+    recent30.sort(key=lambda r: (r["date"], r.get("hour") or 0), reverse=True)
+
     serious_cats_excluding_theft = ctx["serious_cats"] - {"Theft"}
     _shooting_keywords = ("shots fired", "shots heard", "shooting")
     _ofp_keywords = ("ofp violation", "hro violation", "danco", "no contact order",
@@ -897,6 +900,7 @@ def _aggregate_one(rows, ctx):
         "featuredRare":   featured_rare,
         "traffic":        traffic,
         "recent":         recent[:400],
+        "recent30":       recent30[:300],
         "recentSerious":  recent_serious[:500],
         "recentTheft":    recent_theft[:500],
         "_otherExamples": other_examples,  # internal, stripped before output
