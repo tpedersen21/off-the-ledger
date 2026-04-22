@@ -708,7 +708,6 @@ def aggregate_traffic(rows):
 FEATURED_RARE_CODES = [
     "PROSTITUTION",
     "CHILD EXPLOITATION",
-    "ROAD RAGE",
     "HUMAN TRAFFICKING",
     "BOMB THREAT",
     "STALKING",
