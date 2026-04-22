@@ -2276,15 +2276,19 @@ footer .exclusions {
     const dsGrid = document.getElementById("daysSinceGrid");
     dsGrid.innerHTML = "";
 
+    // Offset: data was built as-of lastDate, but today may be later
+    const dataAsOf = new Date(D.meta.lastDate + "T12:00:00Z");
+    const staleOffset = Math.max(0, Math.floor((Date.now() - dataAsOf.getTime()) / 86400000));
+
     const dsEntries = [];
     const dsMap = notable.daysSince || {};
     Object.entries(dsMap).forEach(([cat, entry]) => {
-      dsEntries.push({ label: cat, days: entry.days, last: entry.last });
+      dsEntries.push({ label: cat, days: entry.days + staleOffset, last: entry.last });
     });
     const dsCodes = notable.daysSinceCodes || {};
     Object.entries(dsCodes).forEach(([code, entry]) => {
       const nice = code.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-      dsEntries.push({ label: nice, days: entry.days, last: entry.last });
+      dsEntries.push({ label: nice, days: entry.days + staleOffset, last: entry.last });
     });
     // Sort alphabetically so order is stable and not a comparison
     dsEntries.sort((a, b) => a.label.localeCompare(b.label));
