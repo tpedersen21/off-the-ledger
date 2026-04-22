@@ -122,6 +122,17 @@ main {
   letter-spacing: 0.12em;
   color: var(--ink-soft);
 }
+.mast-map-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: auto;
+}
+.mast-map-link:hover { text-decoration: underline; }
 .mast-meta span strong {
   color: var(--ink);
   font-weight: 700;
@@ -1404,6 +1415,7 @@ footer .exclusions {
       <span>Coverage <strong id="coverageRange">—</strong></span>
       <span>Last Update <strong id="lastUpdate">—</strong></span>
       <span>Source <strong>WCSO Open Data</strong></span>
+      <a href="/map" class="mast-map-link">View Map →</a>
     </div>
   </header>
 
