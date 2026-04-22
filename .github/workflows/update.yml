@@ -2,7 +2,7 @@ name: Update incident data
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # 7 AM UTC = 2 AM CT (3 AM CDT)
+    - cron: '0 11 * * *'  # 11 AM UTC = 6 AM CDT / 5 AM CST
   workflow_dispatch:       # manual trigger from GitHub Actions tab
 
 permissions:
@@ -41,4 +41,4 @@ jobs:
           git add data.js rows.js cache/
           git diff --staged --quiet && echo "No changes." || \
             git commit -m "chore: update incident data $(date -u +%Y-%m-%d)"
-          git push
+          git pull --rebase && git push
