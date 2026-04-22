@@ -1,0 +1,2648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off The Ledger · Washington County Incident Ledger</title>
+<meta name="description" content="Washington County incident ledger.">
+
+<!-- Icons -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#16140f">
+
+<!-- Open Graph / Facebook / LinkedIn / iMessage -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offtheledger.netlify.app/">
+<meta property="og:title" content="Off The Ledger">
+<meta property="og:description" content="Washington County incident ledger.">
+<meta property="og:image" content="https://offtheledger.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@SeenEnoughMN">
+<meta name="twitter:title" content="Off The Ledger">
+<meta name="twitter:description" content="Washington County incident ledger.">
+<meta name="twitter:image" content="https://offtheledger.netlify.app/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f1ebdc;
+  --paper-deep: #e8e0cb;
+  --ink: #16140f;
+  --ink-soft: #3c3830;
+  --ink-muted: #75705f;
+  --rule: #2a251c;
+  --red: #a51f1c;
+  --red-deep: #6d1412;
+  --blue: #1d3f5c;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Fraunces", Georgia, serif;
+  font-feature-settings: "ss01", "liga", "onum";
+  font-variation-settings: "opsz" 14, "SOFT" 0, "WONK" 0;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* subtle paper grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,0,0,0.025) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(0,0,0,0.02) 0 1px, transparent 2px),
+    radial-gradient(circle at 40% 80%, rgba(0,0,0,0.015) 0 1px, transparent 2px);
+  background-size: 7px 7px, 11px 11px, 13px 13px;
+  mix-blend-mode: multiply;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 40px 80px;
+}
+
+/* ------------- MASTHEAD ------------- */
+.masthead {
+  border-top: 4px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0 14px;
+  position: relative;
+}
+.masthead::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -5px;
+  border-bottom: 1px solid var(--rule);
+}
+.masthead h1 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(32px, 5.5vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  text-transform: none;
+}
+.masthead h1 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--red);
+}
+.mast-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+.mast-meta span strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ------------- HERO STATS ------------- */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--rule);
+  margin: 0;
+}
+.hero-stats .stat {
+  padding: 28px 24px 30px;
+  border-right: 1px solid var(--paper-deep);
+}
+.hero-stats .stat:last-child { border-right: none; }
+.stat-num {
+  font-family: "Fraunces", serif;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.stat-num.accent { color: var(--red); }
+.stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+}
+@media (max-width: 820px) {
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats .stat:nth-child(2) { border-right: none; }
+  .hero-stats .stat:nth-child(1), .hero-stats .stat:nth-child(2) {
+    border-bottom: 1px solid var(--paper-deep);
+  }
+}
+
+/* ------------- SECTION ------------- */
+section { margin-top: 56px; }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+.section-head h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  margin: 0;
+  font-variation-settings: "opsz" 36;
+}
+.section-head .kicker {
+  font-family: "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+}
+
+.note {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  max-width: 720px;
+  margin: 0 0 18px;
+}
+
+.caveat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
+  max-width: 820px;
+  margin: 22px 0 0;
+  padding: 12px 14px;
+  border-left: 2px solid var(--red);
+  background: rgba(165, 31, 28, 0.04);
+}
+.caveat strong {
+  color: var(--red);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-right: 4px;
+}
+.caveat em {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* ------------- NOTABLE NUMBERS ------------- */
+.notable-head {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--red);
+  font-weight: 700;
+  margin: 24px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--paper-deep);
+}
+.notable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 18px 0;
+  margin-bottom: 12px;
+}
+.notable-cell {
+  padding: 0 16px;
+  border-left: 1px solid var(--rule);
+}
+.notable-cell-empty {
+  border-left: 1px solid var(--rule);
+}
+@media (max-width: 700px) {
+  .notable-cell {
+    border-left: none;
+    padding: 10px 0;
+    border-top: 1px dotted var(--rule);
+  }
+  .notable-cell:first-child { border-top: none; padding-top: 0; }
+  .notable-cell-empty { display: none; }
+}
+.notable-num {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.notable-num.red { color: var(--red); }
+.notable-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-top: 6px;
+}
+.notable-sub {
+  font-family: "Fraunces", serif;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+.notable-note {
+  font-family: "Fraunces", serif;
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+.yoy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 4px 24px;
+  margin-bottom: 20px;
+}
+.yoy-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px dotted rgba(22, 20, 15, 0.12);
+  align-items: baseline;
+}
+.yoy-cat {
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.yoy-counts {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.yoy-pct {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  min-width: 62px;
+  text-align: right;
+}
+.yoy-pct.up   { color: var(--red); }
+.yoy-pct.down { color: #3d6234; }
+
+/* ------------- TIME-WINDOW TOGGLE ------------- */
+.window-toggle {
+  display: flex;
+  gap: 0;
+  margin: 14px 0 28px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.win-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--rule);
+  padding: 12px 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.win-btn:last-child { border-right: none; }
+.win-btn:hover { color: var(--ink); background: rgba(22, 20, 15, 0.03); }
+.win-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (max-width: 640px) {
+  .window-toggle { flex-wrap: wrap; }
+  .win-btn { flex: 1 1 33%; border-bottom: 1px solid var(--rule); }
+  .win-btn:nth-child(3) { border-right: none; }
+  .win-btn:nth-child(n+4) { border-bottom: none; }
+}
+
+/* ------------- TABS ------------- */
+.tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--rule);
+  margin: 14px 0 18px;
+  flex-wrap: wrap;
+}
+.tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 11px 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.12s, border-color 0.12s;
+}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.tab-panel-kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* ------------- COLLAPSIBLE CATEGORY TIERS ------------- */
+.tier-head { cursor: pointer; user-select: none; }
+.tier-head::after {
+  content: "▾";
+  margin-left: auto;
+  padding-left: 10px;
+  color: var(--ink-muted);
+  font-size: 10px;
+  transition: transform 0.15s;
+  display: inline-block;
+}
+.tier-group.collapsed .tier-head::after { transform: rotate(-90deg); }
+.tier-group.collapsed .bars { display: none; }
+
+/* ------------- FILTER STRIP ------------- */
+.filter-strip {
+  margin-top: 28px;
+  padding: 14px 18px;
+  border: 1px solid var(--rule);
+  background: rgba(22, 20, 15, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.filter-strip.active {
+  background: rgba(165, 31, 28, 0.07);
+  border-color: var(--red);
+}
+.filter-state { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.filter-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+  font-weight: 700;
+}
+.filter-current {
+  font-family: "Fraunces", serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.filter-strip.active .filter-current { color: var(--red); }
+.filter-current-link {
+  cursor: pointer;
+  transition: opacity 0.12s;
+  text-decoration: underline;
+  text-decoration-color: rgba(165, 31, 28, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.filter-current-link:hover { opacity: 0.75; }
+.filter-clear {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.filter-clear:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.filter-hint {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-muted);
+  max-width: 380px;
+  text-align: right;
+}
+@media (max-width: 720px) {
+  .filter-hint { text-align: left; max-width: none; }
+}
+
+/* ------------- CLICKABLE BARS ------------- */
+.bars .clickable { cursor: pointer; transition: color 0.12s; }
+.bars .clickable:hover { color: var(--red); }
+.leak.clickable { cursor: pointer; transition: background 0.12s; }
+.leak.clickable:hover { background: rgba(165, 31, 28, 0.06); }
+.recent tbody tr.clickable { cursor: pointer; transition: background 0.12s; }
+.recent tbody tr.clickable:hover { background: rgba(22, 20, 15, 0.04); }
+
+/* ------------- MODAL ------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 20, 15, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: modalFade 0.18s ease-out;
+}
+.modal-overlay[hidden] { display: none; }
+@keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  position: relative;
+  background: var(--paper);
+  max-width: 560px;
+  width: 100%;
+  border: 1px solid var(--rule);
+  padding: 36px 36px 28px;
+  font-family: "Fraunces", serif;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.18);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute;
+  top: 12px; right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.modal-close:hover { color: var(--red); }
+.modal-kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.modal-date {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 144;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.modal-city {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-bottom: 22px;
+}
+.modal-rows {
+  margin: 0 0 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  row-gap: 10px;
+  column-gap: 18px;
+}
+.modal-rows dt {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  align-self: baseline;
+  padding-top: 4px;
+}
+.modal-rows dd {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.modal-rows dd .case-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  background: var(--paper-deep);
+  padding: 2px 8px;
+  letter-spacing: 0.04em;
+}
+.modal-action {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.modal-action p { margin: 0 0 14px; font-style: italic; }
+.modal-btn {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 18px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: background 0.12s;
+}
+.modal-btn:hover { background: var(--red); }
+
+/* ------------- FILTER PICKER ------------- */
+.picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 20, 15, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  padding: 60px 20px 20px;
+  animation: modalFade 0.18s ease-out;
+}
+.picker-overlay[hidden] { display: none; }
+.picker {
+  position: relative;
+  background: var(--paper);
+  max-width: 720px;
+  width: 100%;
+  border: 1px solid var(--rule);
+  padding: 32px 36px 28px;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.18);
+  max-height: calc(100vh - 100px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.picker-close {
+  position: absolute;
+  top: 12px; right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.picker-close:hover { color: var(--red); }
+.picker-kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.picker-sub {
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 22px;
+}
+.picker-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  flex: 1;
+  min-height: 0;
+}
+@media (max-width: 640px) {
+  .picker-cols { grid-template-columns: 1fr; gap: 20px; }
+}
+.picker-col { display: flex; flex-direction: column; min-height: 0; }
+.picker-col-head {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 6px;
+}
+.picker-list {
+  overflow-y: auto;
+  flex: 1;
+}
+.picker-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  color: var(--ink);
+  border-bottom: 1px dotted rgba(22, 20, 15, 0.12);
+  transition: color 0.1s, padding-left 0.1s;
+}
+.picker-item:hover { color: var(--red); padding-left: 4px; }
+.picker-item .picker-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  align-self: center;
+}
+.picker-tier-head {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--red);
+  font-weight: 700;
+  margin: 14px 0 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+}
+.picker-tier-head:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+
+/* ------------- TRAFFIC ENFORCEMENT SECTION ------------- */
+.traffic-section { border-top: 1px solid var(--rule); padding-top: 40px; }
+.traffic-hero, .theft-hero {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: 24px 0 32px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 20px 0;
+}
+@media (max-width: 900px) {
+  .traffic-hero, .theft-hero { grid-template-columns: repeat(2, 1fr); gap: 16px 24px; padding: 20px 4px; }
+}
+.t-stat { padding: 0 20px; border-left: 1px solid var(--rule); }
+.t-stat:first-child { border-left: none; padding-left: 0; }
+@media (max-width: 900px) {
+  .t-stat { border-left: none; padding: 0; }
+}
+.t-num {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.t-num.t-red { color: var(--red); }
+.t-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-top: 8px;
+}
+.section-sub { margin-top: 24px; }
+.section-sub h3 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin: 0;
+  padding-bottom: 6px;
+}
+.t-tails {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 24px;
+  margin-top: 12px;
+}
+@media (max-width: 640px) {
+  .t-tails { grid-template-columns: 1fr; }
+}
+.t-tail-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px dotted rgba(22, 20, 15, 0.12);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--ink);
+}
+.t-tail-row .tail-count {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+/* ------------- THE LONG TAIL ------------- */
+.long-tail { border-top: 1px solid var(--rule); padding-top: 40px; }
+.rare-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin: 20px 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+.rare-search {
+  flex: 1;
+  min-width: 240px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.rare-search:focus {
+  outline: none;
+  border-color: var(--red);
+  background: rgba(255, 255, 255, 0.4);
+}
+.rare-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.rare-list { display: flex; flex-direction: column; }
+.rare-item {
+  border-bottom: 1px solid var(--rule);
+}
+.rare-head {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 16px;
+  padding: 10px 0;
+  cursor: pointer;
+  align-items: baseline;
+  transition: padding-left 0.12s;
+}
+.rare-head:hover { padding-left: 6px; }
+.rare-head.open { padding-left: 6px; }
+.rare-item.open .rare-head { color: var(--red); }
+.rare-head-count {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding-right: 4px;
+}
+.rare-head-code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  word-break: break-word;
+}
+.rare-head-cat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.rare-body {
+  display: none;
+  padding: 8px 0 16px 64px;
+  background: rgba(22, 20, 15, 0.02);
+}
+.rare-item.open .rare-body { display: block; }
+.rare-instance {
+  display: grid;
+  grid-template-columns: 110px 120px 1fr 110px;
+  gap: 14px;
+  padding: 6px 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--ink);
+  cursor: pointer;
+  border-bottom: 1px dotted rgba(22, 20, 15, 0.1);
+  transition: background 0.1s;
+}
+.rare-instance:hover { background: rgba(165, 31, 28, 0.06); }
+.rare-instance .inst-date { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.rare-instance .inst-city { color: var(--ink); }
+.rare-instance .inst-block { color: var(--ink-soft); word-break: break-word; }
+.rare-instance .inst-case {
+  text-align: right;
+  color: var(--ink-muted);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 640px) {
+  .rare-instance { grid-template-columns: 1fr 1fr; }
+  .rare-instance .inst-block, .rare-instance .inst-case { grid-column: 1 / -1; }
+  .rare-body { padding-left: 16px; }
+}
+
+/* ------------- RECENT TABLE ------------- */
+.recent-wrap { overflow-x: auto; }
+table.recent {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+}
+.recent th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 6px 14px 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.recent td {
+  padding: 7px 14px 7px 0;
+  border-bottom: 1px dotted rgba(22,20,15,0.18);
+  vertical-align: top;
+  color: var(--ink);
+}
+.recent td.date   { white-space: nowrap; color: var(--ink-muted); width: 88px; }
+.recent td.city   { white-space: nowrap; width: 130px; }
+.recent td.cat    { white-space: nowrap; width: 110px; }
+.recent td.cat .tag {
+  display: inline-block;
+  padding: 1px 6px 2px;
+  border: 1px solid var(--rule);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+}
+.recent td.cat .tag.hot { color: var(--red); border-color: var(--red); }
+.recent td.type   { font-family: "Fraunces", serif; font-size: 14.5px; }
+.recent td.loc    { color: var(--ink-soft); font-size: 11.5px; }
+
+/* ------------- WEEKLY LINE CHART ------------- */
+.chart-wrap {
+  background: transparent;
+  padding: 10px 0 4px;
+}
+.chart-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: "JetBrains Mono", monospace;
+}
+.axis text {
+  font-size: 9.5px;
+  fill: var(--ink-muted);
+  letter-spacing: 0.06em;
+}
+.axis line, .axis path {
+  stroke: var(--rule);
+  stroke-width: 0.5;
+  fill: none;
+}
+.gridline { stroke: var(--paper-deep); stroke-width: 0.5; }
+.line-main { fill: none; stroke: var(--ink); stroke-width: 1.25; }
+.line-avg  { fill: none; stroke: var(--red); stroke-width: 1; stroke-dasharray: 3 3; }
+.point-hover { fill: var(--red); }
+
+.legend {
+  display: flex;
+  gap: 22px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-top: 14px;
+}
+.legend .swatch {
+  display: inline-block;
+  width: 18px; height: 2px;
+  background: var(--ink);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.legend .swatch.red { background: var(--red); }
+.legend .swatch.dashed {
+  background: repeating-linear-gradient(90deg, var(--red) 0 4px, transparent 4px 8px);
+  height: 2px;
+}
+
+/* ------------- BAR CHARTS (CSS) ------------- */
+.bars {
+  display: grid;
+  grid-template-columns: 170px 1fr 70px;
+  gap: 4px 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  align-items: center;
+}
+.bars .label {
+  text-align: left;
+  color: var(--ink);
+  padding: 6px 0;
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+}
+.bars .bar {
+  position: relative;
+  height: 18px;
+  background: transparent;
+  border-bottom: 1px dotted rgba(22,20,15,0.15);
+}
+.bars .bar .fill {
+  position: absolute;
+  top: 2px; bottom: 2px;
+  left: 0;
+  background: var(--ink);
+  opacity: 0.85;
+}
+.bars .bar.cat-hot .fill { background: var(--red); opacity: 0.9; }
+.bars .count {
+  text-align: right;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+@media (max-width: 860px) {
+  .two-col { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ------------- OFF THE LEDGER ------------- */
+.off-ledger {
+  margin-top: 56px;
+  padding: 0;
+  border-top: 4px double var(--red);
+  border-bottom: 1px solid var(--rule);
+}
+.off-ledger .section-head {
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 0 8px;
+  margin: 0;
+}
+.off-ledger .section-head h2 {
+  color: var(--red);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+}
+.off-ledger .section-head .kicker {
+  color: var(--red);
+  font-weight: 700;
+}
+.off-ledger > .note {
+  margin: 18px 0 8px;
+  color: var(--ink);
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 820px;
+}
+.leak-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  margin: 26px 0 8px;
+  border-top: 1px solid var(--rule);
+}
+@media (max-width: 640px) {
+  .leak-grid { grid-template-columns: 1fr; }
+}
+.leak {
+  padding: 24px 24px 26px;
+  border-right: 1px solid var(--paper-deep);
+  border-bottom: 1px solid var(--paper-deep);
+}
+.leak:last-child { border-right: none; }
+.leak-num {
+  font-family: "Fraunces", serif;
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--red);
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.leak-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.leak-gloss {
+  font-family: "Fraunces", serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.leak-codes {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+.leak-codes-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.leak-codes-head .leak-codes-sub {
+  color: var(--ink-muted);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+.leak-codes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px 36px;
+}
+.leak-codes-cat-name {
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--red);
+  border-bottom: 1px solid var(--paper-deep);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.leak-codes-row {
+  display: grid;
+  grid-template-columns: 1fr 60px;
+  gap: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  padding: 3px 0;
+  color: var(--ink);
+  align-items: baseline;
+}
+.leak-codes-row .lc-code {
+  letter-spacing: 0.04em;
+}
+.leak-codes-row .lc-count {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+/* ------------- TIER GROUPS ------------- */
+.tier-group { margin-bottom: 22px; }
+.tier-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+.tier-head .tier-name { color: var(--ink); font-weight: 700; }
+.tier-head.t-leak .tier-name { color: var(--red); }
+.tier-head .tier-total {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------- YEAR GRID ------------- */
+.year-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+.year-grid .yr {
+  padding: 22px 18px 24px;
+  border-right: 1px solid var(--paper-deep);
+  border-bottom: 1px solid var(--paper-deep);
+}
+.year-grid .yr:last-child { border-right: none; }
+.year-grid .yr-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+}
+.year-grid .yr-num.partial::after {
+  content: " · partial";
+  color: var(--red);
+}
+.year-grid .yr-total {
+  font-family: "Fraunces", serif;
+  font-size: 36px;
+  line-height: 1;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.year-grid .yr-pace {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  letter-spacing: 0.05em;
+}
+.year-grid .yr-pace .delta-up { color: var(--red); }
+.year-grid .yr-pace .delta-down { color: var(--blue); }
+
+/* ------------- HOUR-OF-DAY ------------- */
+.hour-chart {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 3px;
+  align-items: end;
+  height: 160px;
+  border-bottom: 1px solid var(--rule);
+  padding-top: 18px;
+  position: relative;
+}
+.hour-chart .hb {
+  background: var(--ink);
+  opacity: 0.85;
+  position: relative;
+}
+.hour-chart .hb.peak { background: var(--red); opacity: 0.95; }
+.hour-chart .hb .hcount {
+  position: absolute;
+  top: -16px; left: 50%;
+  transform: translateX(-50%);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  display: none;
+}
+.hour-chart .hb:hover .hcount { display: block; }
+.hour-axis {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 3px;
+  margin-top: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  color: var(--ink-muted);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* ------------- TOP BLOCKS ------------- */
+.blocks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: blockc;
+}
+.blocks li {
+  display: grid;
+  grid-template-columns: 36px 1fr 140px 70px;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px dotted rgba(22,20,15,0.18);
+  align-items: baseline;
+  counter-increment: blockc;
+}
+.blocks li::before {
+  content: counter(blockc, decimal-leading-zero);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+}
+.blocks .b-loc {
+  font-family: "Fraunces", serif;
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.blocks .b-city {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  text-align: right;
+}
+.blocks .b-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  text-align: right;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------- FOOTER ------------- */
+footer {
+  margin-top: 72px;
+  padding-top: 18px;
+  border-top: 4px solid var(--rule);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+footer strong { color: var(--ink); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; }
+footer a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+footer .exclusions {
+  font-family: "Fraunces", serif;
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--ink-soft);
+  max-width: 780px;
+  margin: 10px 0;
+  letter-spacing: 0;
+}
+
+/* ------------- EMPTY STATE ------------- */
+.empty {
+  margin: 80px auto;
+  max-width: 640px;
+  padding: 40px;
+  border: 1px solid var(--rule);
+  font-family: "Fraunces", serif;
+  font-size: 17px;
+  line-height: 1.55;
+}
+.empty h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  margin-top: 0;
+  font-size: 26px;
+  color: var(--red);
+}
+.empty code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+</style>
+</head>
+<body>
+<main>
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <h1>Washington County <em>Incident Ledger</em></h1>
+    <div class="mast-meta">
+      <span>Vol. I</span>
+      <span>No. <strong id="weekNumber">—</strong></span>
+      <span>Coverage <strong id="coverageRange">—</strong></span>
+      <span>Last Update <strong id="lastUpdate">—</strong></span>
+      <span>Source <strong>WCSO Open Data</strong></span>
+    </div>
+  </header>
+
+  <!-- Hero stats -->
+  <div class="hero-stats" id="heroStats">
+    <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label">Incidents Indexed</div></div>
+    <div class="stat"><div class="stat-num" id="weekCount">—</div><div class="stat-label">Weeks Of Data</div></div>
+    <div class="stat"><div class="stat-num accent" id="lastWeekCount">—</div><div class="stat-label">Last Reported Week</div></div>
+    <div class="stat"><div class="stat-num" id="avgWeek">—</div><div class="stat-label">Weekly Average</div></div>
+  </div>
+
+  <!-- Filter strip -->
+  <div class="filter-strip" id="filterStrip">
+    <div class="filter-state">
+      <span class="filter-label">View</span>
+      <span class="filter-current" id="filterCurrent">All Of Washington County</span>
+      <button class="filter-clear" id="filterClear" hidden>&larr; Back to all</button>
+    </div>
+    <div class="filter-hint">Click the view label to pick a city or category. Click any incident row for details.</div>
+  </div>
+
+  <!-- Time-window toggle -->
+  <div class="window-toggle" id="windowToggle" role="tablist">
+    <button class="win-btn" data-window="30d" aria-pressed="false">Last 30 Days</button>
+    <button class="win-btn" data-window="90d" aria-pressed="true">Last 90 Days</button>
+    <button class="win-btn" data-window="1y" aria-pressed="false">Last Year</button>
+    <button class="win-btn" data-window="2y" aria-pressed="false">Last 2 Years</button>
+    <button class="win-btn" data-window="all" aria-pressed="false">All Time</button>
+  </div>
+
+  <!-- Filter picker popover -->
+  <div class="picker-overlay" id="pickerOverlay" hidden>
+    <div class="picker" role="dialog" aria-modal="true" aria-label="Filter picker">
+      <button class="picker-close" id="pickerClose" aria-label="Close">×</button>
+      <div class="picker-kicker">Filter The Ledger</div>
+      <div class="picker-sub">Jump to a single city or category</div>
+      <div class="picker-cols">
+        <div class="picker-col">
+          <div class="picker-col-head">Cities</div>
+          <div class="picker-list" id="pickerCities"></div>
+        </div>
+        <div class="picker-col">
+          <div class="picker-col-head">Categories</div>
+          <div class="picker-list" id="pickerCats"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Off The Ledger -->
+  <section id="sec-leaks" class="off-ledger">
+    <div class="section-head">
+      <h2>Off The Ledger</h2>
+      <span class="kicker">Excluded By Policy &middot; Present In Data</span>
+    </div>
+    <p class="note">
+      The county strips certain incident categories before publishing. The exclusion list names mental health crisis events and Minnesota Adult Abuse Reporting Center reports. They appear in the data anyway.
+    </p>
+    <div class="leak-grid" id="leakGrid"></div>
+
+    <div class="leak-codes">
+      <div class="leak-codes-head">
+        <span>Source Codes</span>
+        <span class="leak-codes-sub">Exact dispatch strings &middot; counts as recorded</span>
+      </div>
+      <div class="leak-codes-grid" id="leakCodesGrid"></div>
+    </div>
+
+    <p class="caveat">
+      <em>MAARC</em> = Minnesota Adult Abuse Reporting Center. <em>CPS</em> = Child Protective Services. What each Suicide / Suicidal code represents (attempt, completion, threat, ideation) would need agency confirmation.
+    </p>
+  </section>
+
+  <!-- Section: By The Numbers -->
+  <section id="sec-notable">
+    <div class="section-head">
+      <h2>By The Numbers</h2>
+      <span class="kicker">All-Time Observations &middot; Not Window-Scoped</span>
+    </div>
+
+    <div class="notable-head">Days Since</div>
+    <div class="notable-grid" id="daysSinceGrid"></div>
+
+    <div class="notable-head">Patterns</div>
+    <div class="notable-grid" id="patternsGrid"></div>
+
+    <div class="notable-head">Year Over Year</div>
+    <p class="notable-note" id="yoyNote">Largest category changes from previous year to most recent year. Categories with fewer than 20 incidents in the baseline year are excluded.</p>
+    <div class="yoy-grid" id="yoyGrid"></div>
+  </section>
+
+  <!-- Section: Recent Activity (tabbed) -->
+  <section id="sec-recent-tabs">
+    <div class="section-head">
+      <h2>Recent Activity</h2>
+      <span class="kicker">Last 30 &amp; 7 Days &middot; Click A Tab</span>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="serious">30 Days · Serious</button>
+      <button class="tab" data-tab="theft">30 Days · Theft</button>
+      <button class="tab" data-tab="raw">Last 7 Days · All</button>
+    </div>
+    <div class="tab-panel active" data-panel="serious">
+      <div class="tab-panel-kicker" id="recentSeriousKicker">Off The Ledger &middot; Index Crimes</div>
+      <div class="recent-wrap">
+        <table class="recent">
+          <thead>
+            <tr><th>Date</th><th>City</th><th>Category</th><th>Type</th><th>Block</th></tr>
+          </thead>
+          <tbody id="recentSeriousBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="theft">
+      <div class="tab-panel-kicker" id="recentTheftKicker">Retail And Property Theft</div>
+      <div class="recent-wrap">
+        <table class="recent">
+          <thead>
+            <tr><th>Date</th><th>City</th><th>Category</th><th>Type</th><th>Block</th></tr>
+          </thead>
+          <tbody id="recentTheftBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="raw">
+      <div class="tab-panel-kicker" id="recentKicker">Raw Source Data</div>
+      <div class="recent-wrap">
+        <table class="recent">
+          <thead>
+            <tr><th>Date</th><th>City</th><th>Category</th><th>Type</th><th>Block</th></tr>
+          </thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Weekly volume -->
+  <section id="sec-weekly">
+    <div class="section-head">
+      <h2>Weekly Incident Volume</h2>
+      <span class="kicker" id="weeklyKicker">All Reporting Agencies</span>
+    </div>
+    <p class="note">Total reportable incidents logged each week, county-wide, across all participating agencies.</p>
+    <div class="chart-wrap" id="chartWrap"></div>
+    <div class="legend">
+      <span><span class="swatch"></span>Weekly Total</span>
+      <span><span class="swatch dashed"></span>52-Week Rolling Mean</span>
+    </div>
+    <p class="caveat">
+      <strong>Note:</strong> The dip in February 2024 is a county publishing outage, not a crime drop. Files went up late in a single batch.
+    </p>
+  </section>
+
+  <!-- Two-col: city + category -->
+  <section id="sec-bars">
+    <div class="two-col">
+      <div id="cityWrap">
+        <div class="section-head">
+          <h2>By City</h2>
+          <span class="kicker">All-Time Total &middot; Click To Drill In</span>
+        </div>
+        <div class="bars" id="cityBars"></div>
+      </div>
+      <div id="catWrap">
+        <div class="section-head">
+          <h2>By Category</h2>
+          <span class="kicker">All-Time, Grouped By Type &middot; Click To Drill In</span>
+        </div>
+        <div id="catTiers"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: by year -->
+  <section>
+    <div class="section-head">
+      <h2>Year Over Year</h2>
+      <span class="kicker">Total Incidents</span>
+    </div>
+    <p class="note">Aggregate incident counts by calendar year. Partial years are noted.</p>
+    <div class="year-grid" id="yearGrid"></div>
+  </section>
+
+  <!-- Section: hour of day -->
+  <section>
+    <div class="section-head">
+      <h2>By Hour Of Day</h2>
+      <span class="kicker">All-Time, 24-Hour Clock</span>
+    </div>
+    <p class="note">Distribution of incidents by hour the call was created. Reveals the rhythm of police work.</p>
+    <div class="hour-chart" id="hourChart"></div>
+  </section>
+
+  <!-- Section: top blocks -->
+  <section>
+    <div class="section-head">
+      <h2>Most-Reported Blocks</h2>
+      <span class="kicker">Last 90 Days</span>
+    </div>
+    <p class="note">Specific block-level addresses appearing most often in the trailing 90 days. Apartment complexes, retail centers, and intersections tend to dominate. Patterns here can be the start of a story.</p>
+    <ol class="blocks" id="blockList"></ol>
+  </section>
+
+  <!-- Section: Theft patterns -->
+  <section id="sec-theft">
+    <div class="section-head">
+      <h2>Theft</h2>
+      <span class="kicker" id="theftHeadKicker">Retail, Shoplifting, Property Theft &middot; All-Time</span>
+    </div>
+
+    <div class="theft-hero">
+      <div class="t-stat"><div class="t-num" id="theftTotal">—</div><div class="t-label">Total Thefts</div></div>
+      <div class="t-stat"><div class="t-num" id="theftPerDay">—</div><div class="t-label">Avg Per Day</div></div>
+      <div class="t-stat"><div class="t-num" id="theftPeakDay">—</div><div class="t-label" id="theftPeakDayLabel">Peak Day</div></div>
+      <div class="t-stat"><div class="t-num" id="theftPeakHour">—</div><div class="t-label" id="theftPeakHourLabel">Peak Hour</div></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-head section-sub">
+          <h3>By Day Of Week</h3>
+          <span class="kicker">All-Time</span>
+        </div>
+        <div class="bars" id="theftDowBars"></div>
+      </div>
+      <div>
+        <div class="section-head section-sub">
+          <h3>Most Targeted Blocks</h3>
+          <span class="kicker">All-Time &middot; Top 10</span>
+        </div>
+        <div class="top-blocks" id="theftBlocks"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div><strong>Source</strong> &mdash; Washington County Sheriff's Office, Law Enforcement Records Management (RMS). <a href="https://www.washingtoncountymn.gov/2979/Law-Enforcement-Public-Data" target="_blank" rel="noopener">Open Data Portal</a>.</div>
+    <div><strong>Agencies</strong> &mdash; Bayport &middot; Cottage Grove &middot; Forest Lake &middot; Oak Park Heights &middot; Oakdale &middot; Saint Paul Park &middot; Stillwater &middot; Woodbury &middot; Washington County Sheriff.</div>
+    <p class="exclusions">
+      The following incident categories are excluded from the county's public data feed and therefore from this ledger: domestic assault (physical and verbal), child or elder abuse, criminal sexual conduct, mental health crisis, extra patrol, background checks, search warrants, and bait vehicle alarms. Any story about those patterns must come from court records and press releases, not this dataset.
+    </p>
+    <div><strong>Update</strong> &mdash; Generated <span id="genStamp">—</span>. Run <code style="font-family:inherit">python3 fetch_data.py</code> and refresh to update.</div>
+  </footer>
+
+</main>
+
+<!-- Modal for incident details -->
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalDate">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div class="modal-kicker">Incident Detail</div>
+    <div class="modal-date" id="modalDate"></div>
+    <div class="modal-city" id="modalCity"></div>
+    <dl class="modal-rows" id="modalRows"></dl>
+    <div class="modal-action">
+      <p>Get the full report from the Washington County Sheriff's Office. Submit a public records request via NextRequest, referencing the case number above.</p>
+      <a class="modal-btn" href="https://washcosheriff.nextrequest.com" target="_blank" rel="noopener">Open NextRequest &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<script src="data.js" onerror="window.__noData = true"></script>
+<script>
+(function() {
+  const main = document.querySelector("main");
+
+  if (window.__noData || !window.CRIME_DATA) {
+    main.innerHTML = `
+      <header class="masthead">
+        <h1>Washington County <em>Incident Ledger</em></h1>
+        <div class="mast-meta"><span>No Data Loaded</span></div>
+      </header>
+      <div class="empty">
+        <h2>No data loaded yet.</h2>
+        <p>Run the fetcher to download the historical archive from the county's open-data portal, then reload this page.</p>
+        <p><code>python3 fetch_data.py</code></p>
+        <p>First run downloads roughly 180 weekly CSVs (a few minutes). Subsequent runs only pull new files.</p>
+      </div>`;
+    return;
+  }
+
+  const D = window.CRIME_DATA;
+  const fmt = n => n.toLocaleString("en-US");
+
+  /* ------------- TIME WINDOW SELECTION ------------- */
+  // Read ?window=2y|90d|30d|all from URL. Default to 2y (last 2 years).
+  // The selected window swaps the base data source before city/category filters apply.
+  const urlParams = new URLSearchParams(window.location.search);
+  const filterCity = urlParams.get("city");
+  const filterCategory = urlParams.get("category");
+  const windowParam = urlParams.get("window") || "90d";
+  const availableWindows = (D.windows || {});
+  // Start with the windowed base, fall back to full dataset for "all" or if missing
+  const windowBase = (windowParam !== "all" && availableWindows[windowParam])
+    ? availableWindows[windowParam]
+    : D;
+
+  /* ------------- VIEW SELECTION (city / category layered on top) ------------- */
+  let view = windowBase;
+  let viewMode = "global";  // global | city | category
+  let viewName = null;
+
+  // City/category detail is only computed at the full-time level. If filtering
+  // by city or category while a time window is active, we use the full detail
+  // but need to know it spans all time rather than the window.
+  const timeFilterActive = (windowParam !== "all" && availableWindows[windowParam]);
+
+  if (filterCity && D.cityDetail && D.cityDetail[filterCity]) {
+    const cityBase = D.cityDetail[filterCity];
+    // If a window is active and this city has a per-window slice, use it
+    if (windowParam !== "all" && cityBase.windows && cityBase.windows[windowParam]) {
+      view = cityBase.windows[windowParam];
+    } else {
+      view = cityBase;
+    }
+    viewMode = "city";
+    viewName = filterCity;
+  } else if (filterCategory && D.categoryDetail && D.categoryDetail[filterCategory]) {
+    const catBase = D.categoryDetail[filterCategory];
+    if (windowParam !== "all" && catBase.windows && catBase.windows[windowParam]) {
+      view = catBase.windows[windowParam];
+    } else {
+      view = catBase;
+    }
+    viewMode = "category";
+    viewName = filterCategory;
+  }
+
+  // The global meta is always available for outer chrome (timestamps, generation date)
+  const globalMeta = D.meta;
+
+  /* ------------- WINDOW TOGGLE UI ------------- */
+  document.querySelectorAll(".win-btn").forEach(btn => {
+    const w = btn.getAttribute("data-window");
+    if (w === windowParam || (windowParam === "all" && w === "all")) {
+      btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
+    } else {
+      btn.classList.remove("active");
+      btn.setAttribute("aria-pressed", "false");
+    }
+    btn.addEventListener("click", () => {
+      const url = new URL(window.location);
+      if (w === "all") {
+        url.searchParams.delete("window");
+      } else {
+        url.searchParams.set("window", w);
+      }
+      // Preserve existing city/category filter
+      window.location.href = url.toString();
+    });
+  });
+
+  /* ------------- MASTHEAD ------------- */
+  const h1 = document.querySelector(".masthead h1");
+  if (viewMode === "city") {
+    h1.innerHTML = `${escapeHtml(viewName)} <em>Incident Ledger</em>`;
+    document.title = `${viewName} Incident Ledger`;
+  } else if (viewMode === "category") {
+    h1.innerHTML = `<em>${escapeHtml(viewName)}</em> &middot; Washington County`;
+    document.title = `${viewName} – Washington County Incident Ledger`;
+  }
+
+  /* ------------- FILTER STRIP ------------- */
+  const filterStrip = document.getElementById("filterStrip");
+  const filterCurrent = document.getElementById("filterCurrent");
+  const filterClear = document.getElementById("filterClear");
+  if (viewMode === "city") {
+    filterStrip.classList.add("active");
+    filterCurrent.textContent = `Filtered to ${viewName} · ${fmt(view.totalIncidents)} incidents`;
+    filterCurrent.classList.add("filter-current-link");
+    filterClear.hidden = false;
+  } else if (viewMode === "category") {
+    filterStrip.classList.add("active");
+    filterCurrent.textContent = `Filtered to "${viewName}" · ${fmt(view.totalIncidents)} incidents`;
+    filterCurrent.classList.add("filter-current-link");
+    filterClear.hidden = false;
+  } else {
+    filterCurrent.textContent = "All Of Washington County";
+  }
+  const goHome = () => { window.location.href = window.location.pathname; };
+  filterClear.addEventListener("click", goHome);
+  if (viewMode !== "global") {
+    filterCurrent.addEventListener("click", goHome);
+    // Also make the masthead title a home link when filtered
+    const h1Clickable = document.querySelector(".masthead h1");
+    if (h1Clickable) {
+      h1Clickable.style.cursor = "pointer";
+      h1Clickable.title = "Back to all of Washington County";
+      h1Clickable.addEventListener("click", goHome);
+    }
+  } else {
+    // Global view: clicking the label opens the filter picker
+    filterCurrent.classList.add("filter-current-link");
+    filterCurrent.addEventListener("click", openPicker);
+  }
+
+  /* ------------- FILTER PICKER ------------- */
+  const pickerOverlay = document.getElementById("pickerOverlay");
+  document.getElementById("pickerClose").addEventListener("click", closePicker);
+  pickerOverlay.addEventListener("click", e => { if (e.target === pickerOverlay) closePicker(); });
+
+  function openPicker() {
+    // Populate cities (alphabetical, only cities with detail available)
+    const cityList = document.getElementById("pickerCities");
+    cityList.innerHTML = "";
+    const cities = Object.keys(D.cityDetail || {}).sort();
+    cities.forEach(c => {
+      const count = D.cityDetail[c]?.totalIncidents || 0;
+      const item = document.createElement("div");
+      item.className = "picker-item";
+      item.setAttribute("data-city", c);
+      item.innerHTML = `<span>${escapeHtml(c)}</span><span class="picker-count">${fmt(count)}</span>`;
+      item.addEventListener("click", () => navigate({ city: c }));
+      cityList.appendChild(item);
+    });
+
+    // Populate categories grouped by tier
+    const catList = document.getElementById("pickerCats");
+    catList.innerHTML = "";
+    (D.byCategoryTiered || []).forEach(tier => {
+      if (tier.tier === "Other") return;  // skip the leftover bucket
+      const head = document.createElement("div");
+      head.className = "picker-tier-head";
+      head.textContent = tier.tier;
+      catList.appendChild(head);
+      tier.categories.forEach(c => {
+        if (!(D.categoryDetail && D.categoryDetail[c.category])) return;
+        const item = document.createElement("div");
+        item.className = "picker-item";
+        item.setAttribute("data-category", c.category);
+        item.innerHTML = `<span>${escapeHtml(c.category)}</span><span class="picker-count">${fmt(c.count)}</span>`;
+        item.addEventListener("click", () => navigate({ category: c.category }));
+        catList.appendChild(item);
+      });
+    });
+
+    pickerOverlay.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+  function closePicker() {
+    pickerOverlay.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  /* ------------- HERO STATS (driven by view) ------------- */
+  document.getElementById("totalCount").textContent    = fmt(view.totalIncidents || 0);
+  document.getElementById("weekCount").textContent     = fmt(view.weekCount || 0);
+  document.getElementById("lastWeekCount").textContent = fmt(view.byWeek?.[view.byWeek.length-1]?.total || 0);
+  const avg = view.weekCount ? Math.round(view.totalIncidents / view.weekCount) : 0;
+  document.getElementById("avgWeek").textContent = fmt(avg);
+  document.getElementById("weekNumber").textContent = String(view.byWeek?.length || 0).padStart(3, "0");
+  document.getElementById("coverageRange").textContent = `${view.firstDate || globalMeta.firstDate} → ${view.lastDate || globalMeta.lastDate}`;
+  document.getElementById("lastUpdate").textContent = globalMeta.generated.slice(0,10);
+  document.getElementById("genStamp").textContent = globalMeta.generated.replace("T"," ").slice(0,19) + " UTC";
+
+  /* ------------- CONDITIONAL SECTION VISIBILITY ------------- */
+  // In city-locked view, hide By City (we're already filtered to one)
+  // In category-locked view, hide By Category (same reason)
+  const cityWrap = document.getElementById("cityWrap");
+  const catWrap = document.getElementById("catWrap");
+  if (viewMode === "city") {
+    if (cityWrap) cityWrap.style.display = "none";
+    // Also: if only one column remains, make it full-width
+    const twoCol = catWrap?.parentElement;
+    if (twoCol) twoCol.style.gridTemplateColumns = "1fr";
+  }
+  if (viewMode === "category") {
+    if (catWrap) catWrap.style.display = "none";
+    const twoCol = cityWrap?.parentElement;
+    if (twoCol) twoCol.style.gridTemplateColumns = "1fr";
+  }
+
+  /* ------------- RECENT TABLE (last 7 days, raw feed) ------------- */
+  const body = document.getElementById("recentBody");
+  const recent = view.recent || [];
+  document.getElementById("recentKicker").textContent = `Raw Source Data · ${recent.length} entries`;
+  const hot = new Set(["Robbery","Assault","Homicide","Weapons","Arson","Burglary"]);
+  recent.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.classList.add("clickable");
+    const hotCls = hot.has(r.category) ? " hot" : "";
+    tr.innerHTML = `
+      <td class="date">${r.date}</td>
+      <td class="city">${escapeHtml(r.city)}</td>
+      <td class="cat"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
+      <td class="type">${escapeHtml(r.type)}</td>
+      <td class="loc">${escapeHtml(r.location || "")}</td>`;
+    tr.addEventListener("click", () => openModal(r));
+    body.appendChild(tr);
+  });
+  if (recent.length === 0) {
+    body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No incidents in the most recent week of data.</td></tr>`;
+  }
+
+  /* ------------- LINE CHART ------------- */
+  drawWeeklyChart(view.byWeek || []);
+
+  /* ------------- CITY BARS (clickable, top 30) ------------- */
+  const cityBars = document.getElementById("cityBars");
+  const topCities = (view.byCity || []).slice(0, 30);
+  const cityMax = topCities[0]?.count || 1;
+  topCities.forEach(c => {
+    const pct = (c.count / cityMax * 100).toFixed(2);
+    const wrap = document.createElement("div");
+    wrap.style.display = "contents";
+    wrap.innerHTML = `
+      <div class="label clickable" data-city="${escapeAttr(c.city)}">${escapeHtml(c.city)}</div>
+      <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+      <div class="count">${fmt(c.count)}</div>`;
+    cityBars.appendChild(wrap);
+  });
+  cityBars.addEventListener("click", e => {
+    const el = e.target.closest("[data-city]");
+    if (el) navigate({ city: el.getAttribute("data-city") });
+  });
+
+  /* ------------- OFF THE LEDGER (leaks) ------------- */
+  drawLeaks(view.byCategoryTiered || []);
+  drawLeakCodes(view.leakCodes || []);
+
+  /* ------------- BY THE NUMBERS (all-time, global view only) ------------- */
+  if (viewMode === "global") {
+    drawNotable(D.notable);
+  } else {
+    const notableSec = document.getElementById("sec-notable");
+    if (notableSec) notableSec.style.display = "none";
+  }
+
+  /* ------------- LAST 30 DAYS (serious only) ------------- */
+  drawRecentSerious(view.recentSerious || []);
+
+  /* ------------- THEFT PATTERNS ------------- */
+  drawTheftStats(D.categoryDetail && D.categoryDetail.Theft);
+
+  /* ------------- LAST 30 DAYS (theft) ------------- */
+  drawRecentTheft(view.recentTheft || []);
+
+  /* ------------- CATEGORY TIERS (clickable) ------------- */
+  drawCategoryTiers(view.byCategoryTiered || [], view.byCategory || []);
+
+  /* ------------- YEAR GRID ------------- */
+  drawYears(view.byYear || []);
+
+  /* ------------- HOUR OF DAY ------------- */
+  drawHourChart(view.byHour || []);
+
+  /* ------------- TOP BLOCKS ------------- */
+  drawBlocks(view.topBlocks || []);
+
+  /* ------------- MODAL (escape + outside click) ------------- */
+  const overlay = document.getElementById("modalOverlay");
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  overlay.addEventListener("click", e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { closeModal(); closePicker(); }
+  });
+
+  /* ------------- TABS (Recent Activity) ------------- */
+  document.querySelectorAll(".tabs").forEach(tabBar => {
+    tabBar.addEventListener("click", e => {
+      const btn = e.target.closest(".tab");
+      if (!btn) return;
+      const target = btn.getAttribute("data-tab");
+      const section = btn.closest("section");
+      section.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      section.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      const panel = section.querySelector(`.tab-panel[data-panel="${target}"]`);
+      if (panel) panel.classList.add("active");
+    });
+  });
+
+  /* ------------- COLLAPSIBLE TIERS ------------- */
+  // Default-collapse lower-priority tiers so the top-of-fold shows editorial ones
+  const defaultCollapsed = new Set(["Service Calls", "Procedural", "Unclassified", "Other"]);
+  document.querySelectorAll(".tier-group").forEach(g => {
+    const name = g.querySelector(".tier-name")?.textContent?.trim() || "";
+    if (defaultCollapsed.has(name)) g.classList.add("collapsed");
+    const head = g.querySelector(".tier-head");
+    if (head) head.addEventListener("click", () => g.classList.toggle("collapsed"));
+  });
+
+  /* ------------- Helpers ------------- */
+  function escapeHtml(s) {
+    return (s || "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  function navigate(params) {
+    const url = new URL(window.location);
+    // Preserve the time window if one was set
+    const currentWindow = url.searchParams.get("window");
+    url.search = "";
+    if (currentWindow) url.searchParams.set("window", currentWindow);
+    for (const [k, v] of Object.entries(params)) {
+      if (v) url.searchParams.set(k, v);
+    }
+    window.location.href = url.toString();
+  }
+
+  function openModal(row) {
+    const dateText = row.date + (row.hour != null ? ` at ${String(row.hour).padStart(2,"0")}:00` : "");
+    document.getElementById("modalDate").textContent = dateText;
+    document.getElementById("modalCity").textContent = (row.city || "Unknown") + " · " + (row.category || "");
+    const rows = document.getElementById("modalRows");
+    rows.innerHTML = "";
+    const fields = [
+      ["Type",     row.type || "—"],
+      ["Block",    row.location || "—"],
+      ["Case No.", row.case ? `<span class="case-num">${escapeHtml(row.case)}</span>` : "—"],
+      ["Category", row.category || "—"],
+    ];
+    fields.forEach(([label, val]) => {
+      rows.insertAdjacentHTML("beforeend", `<dt>${label}</dt><dd>${val}</dd>`);
+    });
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+  function closeModal() {
+    overlay.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  function drawLeakCodes(leakCodes) {
+    const grid = document.getElementById("leakCodesGrid");
+    if (!grid) return;
+    if (!leakCodes || leakCodes.length === 0) {
+      grid.parentElement.style.display = "none";
+      return;
+    }
+    leakCodes.forEach(c => {
+      let rows = "";
+      // Cap at 12 codes per category to avoid runaway lists
+      c.codes.slice(0, 12).forEach(cd => {
+        rows += `<div class="leak-codes-row"><div class="lc-code">${escapeHtml(cd.code)}</div><div class="lc-count">${fmt(cd.count)}</div></div>`;
+      });
+      const overflow = c.codes.length > 12
+        ? `<div class="leak-codes-row" style="opacity:0.55"><div class="lc-code">+ ${c.codes.length - 12} more</div><div class="lc-count"></div></div>`
+        : "";
+      grid.insertAdjacentHTML("beforeend", `
+        <div class="leak-codes-cat">
+          <div class="leak-codes-cat-name">${escapeHtml(c.category)}</div>
+          ${rows}
+          ${overflow}
+        </div>`);
+    });
+  }
+
+  function drawTraffic(traffic) {
+    const section = document.getElementById("sec-traffic");
+    if (!section) return;
+    if (!traffic) {
+      section.style.display = "none";
+      return;
+    }
+    const parsed = traffic.total || 0;
+    const totalTraffic = traffic.totalTraffic || 0;
+    const parsePct = totalTraffic ? ((parsed / totalTraffic) * 100).toFixed(1) : "0.0";
+    document.getElementById("trafficKicker").textContent =
+      `${fmt(totalTraffic)} traffic calls · ${fmt(parsed)} speed citations parsed (${parsePct}%)`;
+    document.getElementById("tTrafficTotal").textContent = fmt(totalTraffic);
+    document.getElementById("tTotal").textContent = fmt(parsed);
+    document.getElementById("tMin").textContent = parsed ? traffic.minDelta : "—";
+    document.getElementById("tMax").textContent = parsed ? traffic.maxDelta : "—";
+
+    if (!parsed) {
+      document.getElementById("tDeltaBars").innerHTML = "";
+      document.getElementById("tLimitBars").innerHTML = "";
+      document.getElementById("tTopBody").innerHTML = "";
+      return;
+    }
+
+    const deltaBars = document.getElementById("tDeltaBars");
+    deltaBars.innerHTML = "";
+    const deltaMax = Math.max(...traffic.deltaDistribution.map(b => b.count), 1);
+    traffic.deltaDistribution.forEach(b => {
+      const pct = (b.count / deltaMax * 100).toFixed(2);
+      deltaBars.insertAdjacentHTML("beforeend", `
+        <div class="label">${escapeHtml(b.bucket)}</div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="count">${fmt(b.count)}</div>`);
+    });
+
+    const limitBars = document.getElementById("tLimitBars");
+    limitBars.innerHTML = "";
+    const limitMax = Math.max(...traffic.byLimit.map(b => b.count), 1);
+    traffic.byLimit.forEach(b => {
+      const pct = (b.count / limitMax * 100).toFixed(2);
+      limitBars.insertAdjacentHTML("beforeend", `
+        <div class="label">${b.limit} mph zone</div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="count">${fmt(b.count)}</div>`);
+    });
+
+    renderSpeedTable(document.getElementById("tTopBody"), traffic.topAggressive || []);
+  }
+
+  function renderSpeedTable(body, rows) {
+    if (!body) return;
+    body.innerHTML = "";
+    if (!rows.length) {
+      body.innerHTML = `<tr><td colspan="6" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No speed citations in this view.</td></tr>`;
+      return;
+    }
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.classList.add("clickable");
+      const tailDisplay = r.tail || "—";
+      tr.innerHTML = `
+        <td class="date">${r.date}</td>
+        <td class="city">${escapeHtml(r.city)}</td>
+        <td class="type" style="font-variant-numeric:tabular-nums">${r.speed}</td>
+        <td class="type" style="font-variant-numeric:tabular-nums">${r.limit}</td>
+        <td class="cat"><span class="tag hot">+${r.delta}</span></td>
+        <td class="type">${escapeHtml(tailDisplay)}</td>`;
+      tr.addEventListener("click", () => openModal(r));
+      body.appendChild(tr);
+    });
+  }
+
+  // Pads a grid's last row with empty cells so there are no orphans.
+  // Computes current column count from getComputedStyle and appends empty cells.
+  function fillGridRow(gridEl) {
+    if (!gridEl) return;
+    gridEl.querySelectorAll(".notable-cell-empty").forEach(el => el.remove());
+    const real = gridEl.querySelectorAll(".notable-cell:not(.notable-cell-empty)");
+    if (!real.length) return;
+    const styles = getComputedStyle(gridEl);
+    const cols = styles.gridTemplateColumns.split(" ").filter(s => s.trim()).length;
+    if (cols < 2) return;
+    const remainder = real.length % cols;
+    if (remainder === 0) return;
+    const needed = cols - remainder;
+    for (let i = 0; i < needed; i++) {
+      const empty = document.createElement("div");
+      empty.className = "notable-cell notable-cell-empty";
+      gridEl.appendChild(empty);
+    }
+  }
+
+  // Re-fill rows on resize so orphans don't appear when the window changes size
+  let _fillResizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(_fillResizeTimer);
+    _fillResizeTimer = setTimeout(() => {
+      fillGridRow(document.getElementById("daysSinceGrid"));
+      fillGridRow(document.getElementById("patternsGrid"));
+    }, 120);
+  });
+
+  function drawNotable(notable) {
+    const section = document.getElementById("sec-notable");
+    if (!section || !notable) {
+      if (section) section.style.display = "none";
+      return;
+    }
+
+    // Days Since Last - merge category-level and code-level, sort by rarity
+    const dsGrid = document.getElementById("daysSinceGrid");
+    dsGrid.innerHTML = "";
+
+    const dsEntries = [];
+    const dsMap = notable.daysSince || {};
+    Object.entries(dsMap).forEach(([cat, entry]) => {
+      dsEntries.push({ label: cat, days: entry.days, last: entry.last });
+    });
+    const dsCodes = notable.daysSinceCodes || {};
+    Object.entries(dsCodes).forEach(([code, entry]) => {
+      const nice = code.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      dsEntries.push({ label: nice, days: entry.days, last: entry.last });
+    });
+    // Sort alphabetically so order is stable and not a comparison
+    dsEntries.sort((a, b) => a.label.localeCompare(b.label));
+
+    dsEntries.forEach(entry => {
+      dsGrid.insertAdjacentHTML("beforeend", `
+        <div class="notable-cell">
+          <div class="notable-num red">${fmt(entry.days)}</div>
+          <div class="notable-label">Days Since Last ${escapeHtml(entry.label)}</div>
+          <div class="notable-sub">${entry.last}</div>
+        </div>`);
+    });
+    if (!dsGrid.children.length) {
+      dsGrid.innerHTML = `<div style="font-family:Fraunces,serif;font-style:italic;color:var(--ink-muted);padding:12px 0">No rare events surfaced.</div>`;
+    }
+    fillGridRow(dsGrid);
+
+    // Patterns: peak week, weekend split, peak day, peak hour
+    const pGrid = document.getElementById("patternsGrid");
+    pGrid.innerHTML = "";
+
+    if (notable.peakWeek) {
+      const pw = notable.peakWeek;
+      const wkDate = new Date(pw.week);
+      const wkLabel = wkDate.toLocaleDateString("en-US", {
+        month: "short", day: "numeric", year: "numeric"
+      });
+      pGrid.insertAdjacentHTML("beforeend", `
+        <div class="notable-cell">
+          <div class="notable-num">${fmt(pw.total)}</div>
+          <div class="notable-label">Peak Week</div>
+          <div class="notable-sub">Week of ${wkLabel}</div>
+        </div>`);
+    }
+
+    if (notable.weekendSplit) {
+      pGrid.insertAdjacentHTML("beforeend", `
+        <div class="notable-cell">
+          <div class="notable-num">${notable.weekendSplit.weekendPct}%</div>
+          <div class="notable-label">On Weekends</div>
+          <div class="notable-sub">${fmt(notable.weekendSplit.weekend)} weekend &middot; ${fmt(notable.weekendSplit.weekday)} weekday</div>
+        </div>`);
+    }
+
+    if (notable.peakDow) {
+      pGrid.insertAdjacentHTML("beforeend", `
+        <div class="notable-cell">
+          <div class="notable-num">${escapeHtml(notable.peakDow.name)}</div>
+          <div class="notable-label">Busiest Day</div>
+          <div class="notable-sub">${fmt(notable.peakDow.count)} incidents</div>
+        </div>`);
+    }
+
+    if (notable.peakHour) {
+      const h = notable.peakHour.hour;
+      const hr12 = h === 0 ? "12 AM" : h < 12 ? `${h} AM` : h === 12 ? "12 PM" : `${h - 12} PM`;
+      pGrid.insertAdjacentHTML("beforeend", `
+        <div class="notable-cell">
+          <div class="notable-num">${hr12}</div>
+          <div class="notable-label">Peak Hour</div>
+          <div class="notable-sub">${fmt(notable.peakHour.count)} incidents</div>
+        </div>`);
+    }
+    fillGridRow(pGrid);
+
+    // Year over Year
+    const yoyGrid = document.getElementById("yoyGrid");
+    const yoyNote = document.getElementById("yoyNote");
+    yoyGrid.innerHTML = "";
+    const yoy = notable.yoy || [];
+    if (yoy.length) {
+      const yr = yoy[0];
+      yoyNote.innerHTML = `Change from <strong>${yr.prevYear}</strong> (full year) to <strong>${yr.currYear}</strong> on pace. ${yr.currYear} totals are projected from ${fmt(yr.daysElapsed)} days of data. Categories need at least 50 incidents in ${yr.prevYear} to qualify.`;
+      // Show top 20
+      yoy.slice(0, 20).forEach(r => {
+        const dirCls = r.pct >= 0 ? "up" : "down";
+        const sign = r.pct >= 0 ? "+" : "";
+        yoyGrid.insertAdjacentHTML("beforeend", `
+          <div class="yoy-row">
+            <div class="yoy-cat">${escapeHtml(r.category)}</div>
+            <div class="yoy-counts">${fmt(r.prev)} → ${fmt(r.currOnPace)}</div>
+            <div class="yoy-pct ${dirCls}">${sign}${r.pct}%</div>
+          </div>`);
+      });
+    } else {
+      yoyNote.textContent = "Not enough year-over-year data yet.";
+    }
+  }
+
+  function drawTheftStats(theft) {
+    const section = document.getElementById("sec-theft");
+    if (!section) return;
+    if (!theft) {
+      section.style.display = "none";
+      return;
+    }
+    const total = theft.totalIncidents || 0;
+    const first = new Date(theft.firstDate);
+    const last  = new Date(theft.lastDate);
+    const days  = Math.max(1, Math.round((last - first) / 86400000) + 1);
+    const perDay = (total / days).toFixed(1);
+
+    const dowNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const dowFullNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const dow = theft.byDow || [0,0,0,0,0,0,0];
+    let peakDowIdx = 0;
+    dow.forEach((v, i) => { if (v > dow[peakDowIdx]) peakDowIdx = i; });
+
+    const hour = theft.byHour || [];
+    let peakHourIdx = 0;
+    for (let i = 0; i < hour.length; i++) { if (hour[i] > hour[peakHourIdx]) peakHourIdx = i; }
+
+    document.getElementById("theftHeadKicker").textContent =
+      `Retail, Shoplifting, Property Theft · ${fmt(total)} total · ${theft.firstDate} → ${theft.lastDate}`;
+    document.getElementById("theftTotal").textContent = fmt(total);
+    document.getElementById("theftPerDay").textContent = perDay;
+    document.getElementById("theftPeakDay").textContent = dowNames[peakDowIdx];
+    document.getElementById("theftPeakDayLabel").textContent = `Peak Day · ${fmt(dow[peakDowIdx])} Thefts`;
+    const hourLabel = String(peakHourIdx).padStart(2, "0") + ":00";
+    document.getElementById("theftPeakHour").textContent = hourLabel;
+    document.getElementById("theftPeakHourLabel").textContent = `Peak Hour · ${fmt(hour[peakHourIdx] || 0)} Thefts`;
+
+    // Day of week bars
+    const dowBars = document.getElementById("theftDowBars");
+    dowBars.innerHTML = "";
+    const dowMax = Math.max(...dow, 1);
+    dow.forEach((v, i) => {
+      const pct = (v / dowMax * 100).toFixed(2);
+      const isHot = i === peakDowIdx;
+      const hotCls = isHot ? " cat-hot" : "";
+      dowBars.insertAdjacentHTML("beforeend", `
+        <div class="label">${dowFullNames[i]}</div>
+        <div class="bar${hotCls}"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="count">${fmt(v)}</div>`);
+    });
+
+    // Top blocks - match existing .top-blocks styling
+    const blocks = theft.allTimeBlocks || theft.topBlocks || [];
+    const blocksEl = document.getElementById("theftBlocks");
+    blocksEl.innerHTML = "";
+    if (!blocks.length) {
+      blocksEl.innerHTML = `<div style="font-style:italic;color:var(--ink-muted);font-family:Fraunces,serif;padding:12px 0">No location data available.</div>`;
+      return;
+    }
+    const ol = document.createElement("ol");
+    ol.className = "top-blocks";
+    blocks.slice(0, 10).forEach(b => {
+      const cityUpper = (b.city || "").toUpperCase();
+      let loc = b.location || "";
+      const reEsc = new RegExp(",\\s*" + cityUpper.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "i");
+      loc = loc.replace(reEsc, "").trim();
+      ol.insertAdjacentHTML("beforeend", `
+        <li>
+          <div class="b-loc">${escapeHtml(loc)}</div>
+          <div class="b-city">${escapeHtml(b.city)}</div>
+          <div class="b-count">${fmt(b.count)}</div>
+        </li>`);
+    });
+    blocksEl.appendChild(ol);
+  }
+
+  function drawRecentTheft(rows) {
+    const body = document.getElementById("recentTheftBody");
+    if (!body) return;
+    document.getElementById("recentTheftKicker").textContent =
+      `Retail And Property Theft · ${rows.length} entries`;
+    if (rows.length === 0) {
+      body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No theft incidents in the most recent 30 days of data.</td></tr>`;
+      return;
+    }
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.classList.add("clickable");
+      tr.innerHTML = `
+        <td class="date">${r.date}</td>
+        <td class="city">${escapeHtml(r.city)}</td>
+        <td class="cat"><span class="tag">${escapeHtml(r.category)}</span></td>
+        <td class="type">${escapeHtml(r.type)}</td>
+        <td class="loc">${escapeHtml(r.location || "")}</td>`;
+      tr.addEventListener("click", () => openModal(r));
+      body.appendChild(tr);
+    });
+  }
+
+  function drawRecentSerious(rows) {
+    const body = document.getElementById("recentSeriousBody");
+    if (!body) return;
+    document.getElementById("recentSeriousKicker").textContent =
+      `Off The Ledger · Index Crimes · ${rows.length} entries`;
+    if (rows.length === 0) {
+      body.innerHTML = `<tr><td colspan="5" style="padding:20px 0;color:var(--ink-muted);font-family:Fraunces,serif;font-style:italic">No qualifying incidents in the most recent 30 days of data.</td></tr>`;
+      return;
+    }
+    // Categories that get the red "hot" tag
+    const offLedger = new Set(["Suicide / Suicidal",
+                               "CPS Referral", "MAARC", "Domestic Violence"]);
+    const indexHot = new Set(["Homicide", "Kidnapping", "Robbery", "Assault",
+                              "Burglary", "Arson", "Sex Offense"]);
+    rows.forEach(r => {
+      const isLeak = offLedger.has(r.category);
+      const isHot = isLeak || indexHot.has(r.category);
+      const hotCls = isHot ? " hot" : "";
+      const tr = document.createElement("tr");
+      tr.classList.add("clickable");
+      tr.innerHTML = `
+        <td class="date">${r.date}</td>
+        <td class="city">${escapeHtml(r.city)}</td>
+        <td class="cat"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
+        <td class="type">${escapeHtml(r.type)}</td>
+        <td class="loc">${escapeHtml(r.location || "")}</td>`;
+      tr.addEventListener("click", () => openModal(r));
+      body.appendChild(tr);
+    });
+  }
+
+  function drawLeaks(tiered) {
+    const grid = document.getElementById("leakGrid");
+    if (!grid) return;
+    const leakTier = (tiered || []).find(t => t.tier === "Off The Ledger");
+    if (!leakTier || !leakTier.categories.length) {
+      grid.parentElement.style.display = "none";
+      return;
+    }
+    const glosses = {
+      "Suicide / Suicidal": 'Dispatch calls coded "suicide," "suicidal," "person in crisis," or "mental health." All excluded as "Mental Health Crisis."',
+      "CPS Referral":    "Child Protective Services. Listed by name in the exclusion list.",
+      "MAARC":           "Minnesota Adult Abuse Reporting Center. Listed by name in the exclusion list.",
+      "Domestic Violence": 'Domestic violence, assault, or abuse. Excluded as "Domestic Violence/Physical."',
+    };
+    leakTier.categories.forEach(c => {
+      grid.insertAdjacentHTML("beforeend", `
+        <div class="leak clickable" data-category="${escapeAttr(c.category)}">
+          <div class="leak-num">${fmt(c.count)}</div>
+          <div class="leak-label">${escapeHtml(c.category)}</div>
+          <div class="leak-gloss">${escapeHtml(glosses[c.category] || "")}</div>
+        </div>`);
+    });
+
+    // Featured rare codes - specific event strings that happen but rarely make news
+    const rareGlosses = {
+      "PROSTITUTION":        "Prostitution call logged but rarely publicized.",
+      "CHILD EXPLOITATION":  "Child exploitation report. Never appears in local news.",
+      "ROAD RAGE":           "Road rage incident. Rarely covered unless it escalates.",
+      "HUMAN TRAFFICKING":   "Human trafficking report. Nearly invisible in public reporting.",
+      "BOMB THREAT":         "Bomb threat dispatched. Often handled quietly.",
+      "STALKING":            "Stalking report. Rarely reported publicly.",
+      "HATE CRIME":          "Coded as a hate crime. Almost never named as such in news.",
+      "HOMICIDE":            "Homicide call. All instances, investigation status varies.",
+      "STRANGULATION":       "Strangulation report. Serious but quietly coded.",
+      "ANIMAL CRUELTY":      "Animal cruelty report.",
+    };
+    const featuredRare = view.featuredRare || {};
+    Object.entries(featuredRare).forEach(([code, entry]) => {
+      const nice = code.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      grid.insertAdjacentHTML("beforeend", `
+        <div class="leak">
+          <div class="leak-num">${fmt(entry.count)}</div>
+          <div class="leak-label">${escapeHtml(nice)}</div>
+          <div class="leak-gloss">${escapeHtml(rareGlosses[code] || "")}<br><span style="font-style:normal;opacity:0.7;font-size:12px">Last: ${entry.last}</span></div>
+        </div>`);
+    });
+    grid.addEventListener("click", e => {
+      const el = e.target.closest("[data-category]");
+      if (el) navigate({ category: el.getAttribute("data-category") });
+    });
+  }
+
+  function drawCategoryTiers(tiered, flat) {
+    const wrap = document.getElementById("catTiers");
+    if (!wrap) return;
+    if (!tiered || tiered.length === 0) {
+      // Fallback to flat list if tiered isn't present
+      const allMax = flat[0]?.count || 1;
+      const html = flat.map(c => {
+        const pct = (c.count / allMax * 100).toFixed(2);
+        return `<div class="label">${escapeHtml(c.category)}</div>
+                <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+                <div class="count">${fmt(c.count)}</div>`;
+      }).join("");
+      wrap.innerHTML = `<div class="bars">${html}</div>`;
+      return;
+    }
+    // Tier-grouped: each tier scaled to its own max so small tiers stay readable
+    tiered.forEach(t => {
+      if (!t.categories.length) return;
+      const localMax = t.categories[0].count || 1;
+      const isLeak = t.tier === "Off The Ledger";
+      const cls = isLeak ? " t-leak" : "";
+      let bars = "";
+      t.categories.forEach(c => {
+        const pct = (c.count / localMax * 100).toFixed(2);
+        const hotCls = isLeak ? " cat-hot" : "";
+        bars += `<div class="label clickable" data-category="${escapeAttr(c.category)}">${escapeHtml(c.category)}</div>
+                 <div class="bar${hotCls}"><div class="fill" style="width:${pct}%"></div></div>
+                 <div class="count">${fmt(c.count)}</div>`;
+      });
+      wrap.insertAdjacentHTML("beforeend", `
+        <div class="tier-group">
+          <div class="tier-head${cls}">
+            <span class="tier-name">${escapeHtml(t.tier)}</span>
+            <span class="tier-total">${fmt(t.total)}</span>
+          </div>
+          <div class="bars">${bars}</div>
+        </div>`);
+    });
+    wrap.addEventListener("click", e => {
+      const el = e.target.closest("[data-category]");
+      if (el) navigate({ category: el.getAttribute("data-category") });
+    });
+  }
+
+  function drawYears(years) {
+    const grid = document.getElementById("yearGrid");
+    if (!years.length) { grid.innerHTML = ""; return; }
+    const firstDate = D.meta.firstDate;
+    const lastDate = D.meta.lastDate;
+    const firstYear = firstDate.slice(0,4);
+    const lastYear = lastDate.slice(0,4);
+    const firstMonth = parseInt(firstDate.slice(5,7), 10);
+    const lastMonth = parseInt(lastDate.slice(5,7), 10);
+
+    function isPartial(yr) {
+      if (yr === firstYear && firstMonth > 1) return true;
+      if (yr === lastYear && lastMonth < 12) return true;
+      return false;
+    }
+
+    years.forEach((y, i) => {
+      const partial = isPartial(y.year);
+      let pace = "";
+      if (i > 0) {
+        const prev = years[i-1];
+        const prevPartial = isPartial(prev.year);
+        if (!partial && !prevPartial && prev.total > 0) {
+          const delta = ((y.total - prev.total) / prev.total * 100);
+          const sign = delta >= 0 ? "+" : "";
+          const cls = delta >= 0 ? "delta-up" : "delta-down";
+          pace = `<span class="${cls}">${sign}${delta.toFixed(0)}%</span> vs prior`;
+        } else {
+          pace = '<span style="color:var(--ink-muted)">— partial year, skipping comparison</span>';
+        }
+      } else {
+        pace = "baseline";
+      }
+      grid.insertAdjacentHTML("beforeend", `
+        <div class="yr">
+          <div class="yr-num${partial ? ' partial' : ''}">${escapeHtml(y.year)}</div>
+          <div class="yr-total">${fmt(y.total)}</div>
+          <div class="yr-pace">${pace}</div>
+        </div>`);
+    });
+  }
+
+  function drawHourChart(hours) {
+    const wrap = document.getElementById("hourChart");
+    if (!hours || hours.length === 0) {
+      wrap.innerHTML = "<p class='note'>No hour-level data available.</p>";
+      return;
+    }
+    const max = Math.max(...hours, 1);
+    const peakHour = hours.indexOf(max);
+    let html = "";
+    for (let h = 0; h < 24; h++) {
+      const hgt = (hours[h] / max * 100).toFixed(1);
+      const cls = h === peakHour ? " peak" : "";
+      html += `<div class="hb${cls}" style="height:${hgt}%" title="${h}:00 — ${fmt(hours[h])} incidents"><span class="hcount">${fmt(hours[h])}</span></div>`;
+    }
+    wrap.innerHTML = html;
+
+    // axis labels (every 3 hours)
+    let axis = '<div class="hour-axis">';
+    for (let h = 0; h < 24; h++) {
+      axis += `<div>${h % 3 === 0 ? String(h).padStart(2,'0') : '·'}</div>`;
+    }
+    axis += "</div>";
+    wrap.insertAdjacentHTML("afterend", axis);
+  }
+
+  function drawBlocks(blocks) {
+    const list = document.getElementById("blockList");
+    if (!blocks.length) {
+      list.innerHTML = "<li style='display:block;font-style:italic;color:var(--ink-muted);font-family:Fraunces,serif'>No location data available.</li>";
+      return;
+    }
+    blocks.forEach(b => {
+      // Strip the redundant ", CITY" suffix from the address string
+      const cityUpper = (b.city || "").toUpperCase();
+      let loc = b.location || "";
+      const re = new RegExp(",\\s*" + cityUpper.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "i");
+      loc = loc.replace(re, "").trim();
+      list.insertAdjacentHTML("beforeend", `
+        <li>
+          <div class="b-loc">${escapeHtml(loc)}</div>
+          <div class="b-city">${escapeHtml(b.city)}</div>
+          <div class="b-count">${fmt(b.count)}</div>
+        </li>`);
+    });
+  }
+
+  function drawWeeklyChart(series) {
+    const wrap = document.getElementById("chartWrap");
+    if (!series || series.length === 0) { wrap.textContent = "No weekly data."; return; }
+
+    const W = 1120, H = 320;
+    const M = { top: 20, right: 16, bottom: 34, left: 48 };
+    const innerW = W - M.left - M.right;
+    const innerH = H - M.top - M.bottom;
+
+    const totals = series.map(s => s.total);
+    const yMax = Math.ceil(Math.max(...totals) / 100) * 100;
+    const yMin = 0;
+
+    const x = i => M.left + (i / (series.length - 1 || 1)) * innerW;
+    const y = v => M.top + innerH - ((v - yMin) / (yMax - yMin)) * innerH;
+
+    // 52-week rolling mean
+    const roll = [];
+    for (let i = 0; i < series.length; i++) {
+      const start = Math.max(0, i - 51);
+      const slice = totals.slice(start, i + 1);
+      roll.push(slice.reduce((a,b) => a+b, 0) / slice.length);
+    }
+
+    // Year gridlines
+    const years = {};
+    series.forEach((s, i) => {
+      const yr = s.week.slice(0,4);
+      if (!(yr in years)) years[yr] = i;
+    });
+
+    // Y ticks (5)
+    const yTicks = [];
+    for (let k = 0; k <= 5; k++) yTicks.push(Math.round(yMax * k / 5));
+
+    const mainPath = series.map((s,i) => `${i===0?"M":"L"}${x(i).toFixed(2)} ${y(s.total).toFixed(2)}`).join(" ");
+    const avgPath  = roll.map((v,i) => `${i===0?"M":"L"}${x(i).toFixed(2)} ${y(v).toFixed(2)}`).join(" ");
+
+    let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Weekly incident volume">`;
+
+    // gridlines
+    yTicks.forEach(t => {
+      const yy = y(t).toFixed(2);
+      svg += `<line class="gridline" x1="${M.left}" x2="${W-M.right}" y1="${yy}" y2="${yy}"/>`;
+    });
+
+    // year dividers
+    Object.entries(years).forEach(([yr, idx]) => {
+      if (idx === 0) return;
+      const xx = x(idx).toFixed(2);
+      svg += `<line class="gridline" x1="${xx}" x2="${xx}" y1="${M.top}" y2="${H-M.bottom}" stroke-dasharray="2 3"/>`;
+      svg += `<text class="axis-label" x="${xx}" y="${H-M.bottom+16}" text-anchor="middle" font-size="9.5" fill="var(--ink-muted)" letter-spacing="0.08em">${yr}</text>`;
+    });
+
+    // y axis labels
+    yTicks.forEach(t => {
+      svg += `<text x="${M.left-8}" y="${(y(t)+3).toFixed(2)}" text-anchor="end" font-size="9.5" fill="var(--ink-muted)" letter-spacing="0.04em">${t}</text>`;
+    });
+
+    // axis frame
+    svg += `<line x1="${M.left}" x2="${M.left}" y1="${M.top}" y2="${H-M.bottom}" stroke="var(--rule)" stroke-width="0.5"/>`;
+    svg += `<line x1="${M.left}" x2="${W-M.right}" y1="${H-M.bottom}" y2="${H-M.bottom}" stroke="var(--rule)" stroke-width="0.5"/>`;
+
+    // lines
+    svg += `<path class="line-main" d="${mainPath}"/>`;
+    svg += `<path class="line-avg" d="${avgPath}"/>`;
+
+    svg += `</svg>`;
+    wrap.innerHTML = svg;
+  }
+})();
+</script>
+</body>
+</html>
