@@ -142,6 +142,7 @@ main {
   color: var(--red);
 }
 .map-ticker:hover .map-ticker-track { animation-play-state: paused; }
+.map-ticker--dc .map-ticker-track { color: var(--ink-muted); }
 @keyframes ticker {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -1484,6 +1485,9 @@ footer .exclusions {
     </div>
     <a href="/map" class="map-ticker" aria-label="View county map">
       <div class="map-ticker-track">VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; </div>
+    </a>
+    <a href="/datacenters" class="map-ticker map-ticker--dc" aria-label="View data centers tracker">
+      <div class="map-ticker-track">DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; DATA CENTERS &middot; </div>
     </a>
   </header>
 
