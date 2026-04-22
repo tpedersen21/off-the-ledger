@@ -60,17 +60,11 @@ body {
   background: rgba(241, 235, 220, 0.15);
 }
 
-.header-title {
-  color: #f1ebdc;
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: -0.01em;
-  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
-}
-.header-title em {
-  font-style: italic;
-  color: #a51f1c;
-  font-weight: 500;
+.header-logo {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .header-sub {
@@ -196,7 +190,7 @@ body {
 <header class="header">
   <a class="header-back" href="/">← Ledger</a>
   <div class="header-divider"></div>
-  <div class="header-title">Off <em>The Ledger</em></div>
+  <img src="/otl.png" alt="Off The Ledger" class="header-logo">
   <div class="header-sub">Washington County · Sponsor Map</div>
 </header>
 
