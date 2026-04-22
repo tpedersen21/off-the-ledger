@@ -202,8 +202,33 @@ body {
 
 <div id="map"></div>
 
+<script src="/data.js" onerror="window.__noData=true"></script>
 <script>
 mapboxgl.accessToken = "pk.eyJ1IjoidHBlZGVyc2VuMjEiLCJhIjoiY21vYWk3Z3NtMDczZzJ5cHRxcTN3dGpkMiJ9.L1Rv7yGHB_7eHUOIUmlNNQ";
+
+const CITY_COORDS = {
+  "Woodbury":             [-92.9590, 44.9239],
+  "Cottage Grove":        [-92.9246, 44.8272],
+  "Stillwater":           [-92.8066, 45.0563],
+  "Forest Lake":          [-92.9824, 45.2779],
+  "Oakdale":              [-92.9646, 45.0019],
+  "Saint Paul Park":      [-92.9874, 44.8508],
+  "Bayport":              [-92.7849, 45.0158],
+  "Lake Elmo":            [-92.8849, 44.9980],
+  "Newport":              [-92.9971, 44.8658],
+  "Mahtomedi":            [-92.9474, 45.0641],
+  "Hugo":                 [-93.0082, 45.1600],
+  "Scandia":              [-92.8191, 45.2644],
+  "Marine on St. Croix":  [-92.7715, 45.1972],
+  "Oak Park Heights":     [-92.8177, 45.0280],
+  "Lake St. Croix Beach": [-92.7700, 45.0050],
+  "West Lakeland":        [-92.8500, 44.9800],
+  "May Township":         [-92.7800, 45.1200],
+  "Baytown Township":     [-92.8200, 45.0500],
+  "Denmark Township":     [-92.9000, 44.9500],
+  "Stillwater Township":  [-92.8300, 45.0400],
+  "Grey Cloud Island":    [-92.9800, 44.8200],
+};
 
 const map = new mapboxgl.Map({
   container: "map",
@@ -220,6 +245,65 @@ map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
 map.addControl(new mapboxgl.ScaleControl({ unit: "imperial" }), "bottom-left");
 
 map.on("load", () => {
+  // Crime bubbles from pre-aggregated 30-day city counts
+  if (window.CRIME_DATA && CRIME_DATA.windows && CRIME_DATA.windows["30d"]) {
+    const cityData = CRIME_DATA.windows["30d"].byCity || [];
+    const features = cityData
+      .filter(d => CITY_COORDS[d.city])
+      .map(d => ({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: CITY_COORDS[d.city] },
+        properties: { city: d.city, count: d.count },
+      }));
+
+    map.addSource("crimes", { type: "geojson", data: { type: "FeatureCollection", features } });
+
+    map.addLayer({
+      id: "crime-bubbles",
+      type: "circle",
+      source: "crimes",
+      paint: {
+        "circle-radius": ["interpolate", ["linear"], ["get", "count"],
+          1, 8, 100, 22, 300, 34, 600, 46, 1200, 60],
+        "circle-color": "#a51f1c",
+        "circle-opacity": 0.18,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#a51f1c",
+        "circle-stroke-opacity": 0.7,
+      },
+    });
+
+    map.addLayer({
+      id: "crime-labels",
+      type: "symbol",
+      source: "crimes",
+      layout: {
+        "text-field": ["concat", ["get", "city"], "\n", ["to-string", ["get", "count"]]],
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Regular"],
+        "text-size": 11,
+        "text-anchor": "center",
+      },
+      paint: {
+        "text-color": "#16140f",
+        "text-halo-color": "#f1ebdc",
+        "text-halo-width": 1.5,
+      },
+    });
+
+    const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
+    map.on("mouseenter", "crime-bubbles", e => {
+      map.getCanvas().style.cursor = "pointer";
+      const { city, count } = e.features[0].properties;
+      popup.setLngLat(e.lngLat)
+        .setHTML(`<div class="popup-category">Last 30 days</div><div class="popup-name">${escHtml(city)}</div><div class="popup-address">${count} incidents</div>`)
+        .addTo(map);
+    });
+    map.on("mouseleave", "crime-bubbles", () => {
+      map.getCanvas().style.cursor = "";
+      popup.remove();
+    });
+  }
+
   fetch("/sponsors.json")
     .then(r => r.json())
     .then(sponsors => {

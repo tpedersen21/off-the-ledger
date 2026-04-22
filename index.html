@@ -122,17 +122,30 @@ main {
   letter-spacing: 0.12em;
   color: var(--ink-soft);
 }
-.mast-map-link {
+.map-ticker {
+  display: block;
+  overflow: hidden;
+  margin-top: 12px;
+  border-top: 1px solid var(--rule);
+  padding: 5px 0 2px;
+  text-decoration: none;
+}
+.map-ticker-track {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
   font-family: "JetBrains Mono", monospace;
   font-size: 11px;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--red);
-  text-decoration: none;
-  font-weight: 700;
-  margin-left: auto;
 }
-.mast-map-link:hover { text-decoration: underline; }
+.map-ticker:hover .map-ticker-track { animation-play-state: paused; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 .mast-meta span strong {
   color: var(--ink);
   font-weight: 700;
@@ -1415,8 +1428,10 @@ footer .exclusions {
       <span>Coverage <strong id="coverageRange">—</strong></span>
       <span>Last Update <strong id="lastUpdate">—</strong></span>
       <span>Source <strong>WCSO Open Data</strong></span>
-      <a href="/map" class="mast-map-link">View Map →</a>
     </div>
+    <a href="/map" class="map-ticker" aria-label="View county map">
+      <div class="map-ticker-track">VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; VIEW MAP &middot; </div>
+    </a>
   </header>
 
   <!-- Hero stats -->
