@@ -2726,8 +2726,10 @@ footer .exclusions {
           const sign = delta >= 0 ? "+" : "";
           const cls = delta >= 0 ? "delta-up" : "delta-down";
           pace = `<span class="${cls}">${sign}${delta.toFixed(0)}%</span> vs prior`;
-        } else {
+        } else if (partial) {
           pace = '<span style="color:var(--ink-muted)">— partial year, skipping comparison</span>';
+        } else {
+          pace = '<span style="color:var(--ink-muted)">first full year</span>';
         }
       } else {
         pace = "baseline";
