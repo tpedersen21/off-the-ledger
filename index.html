@@ -1015,9 +1015,23 @@ table.recent {
 .recent td.loc    { color: var(--ink-soft); font-size: 11.5px; }
 
 @media (max-width: 640px) {
-  .recent td.loc, .recent th:last-child { display: none; }
-  .recent td.city { width: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .recent td.date { width: 72px; font-size: 11px; }
+  /* Hide block and city columns — city folds into category cell */
+  .recent td.loc, .recent th:last-child,
+  .recent td.city, .recent th:nth-child(2) { display: none; }
+  /* Show city as sub-line under the category tag */
+  .recent td.cat::after {
+    content: attr(data-city);
+    display: block;
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-top: 3px;
+    letter-spacing: 0;
+    text-transform: none;
+    font-family: "JetBrains Mono", monospace;
+  }
+  /* Hide year from date */
+  .recent td.date .d-yr { display: none; }
+  .recent td.date { width: 46px; font-size: 11px; }
   .recent td.type { font-size: 13px; }
   .recent td.cat .tag { font-size: 9.5px; padding: 1px 4px 2px; }
   table.recent { font-size: 11.5px; }
@@ -1944,9 +1958,9 @@ footer .exclusions {
       tr.classList.add("clickable");
       const hotCls = hotRaw.has(r.category) ? " hot" : "";
       tr.innerHTML = `
-        <td class="date">${r.date}</td>
+        <td class="date"><span class="d-yr">${r.date.slice(0,5)}</span>${r.date.slice(5)}</td>
         <td class="city">${escapeHtml(r.city)}</td>
-        <td class="cat"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
+        <td class="cat" data-city="${escapeAttr(r.city)}"><span class="tag${hotCls}">${escapeHtml(r.category)}</span></td>
         <td class="type">${escapeHtml(r.type)}</td>
         <td class="loc">${escapeHtml(r.location || "")}</td>`;
       tr.addEventListener("click", () => openModal(r));
@@ -2546,9 +2560,9 @@ footer .exclusions {
         const tr = document.createElement("tr");
         tr.classList.add("clickable");
         tr.innerHTML = `
-          <td class="date">${r.date}</td>
+          <td class="date"><span class="d-yr">${r.date.slice(0,5)}</span>${r.date.slice(5)}</td>
           <td class="city">${escapeHtml(r.city)}</td>
-          <td class="cat"><span class="tag">${escapeHtml(r.category)}</span></td>
+          <td class="cat" data-city="${escapeAttr(r.city)}"><span class="tag">${escapeHtml(r.category)}</span></td>
           <td class="type">${escapeHtml(r.type)}</td>
           <td class="loc">${escapeHtml(r.location || "")}</td>`;
         tr.addEventListener("click", () => openModal(r));
@@ -2577,9 +2591,9 @@ footer .exclusions {
         const tr = document.createElement("tr");
         tr.classList.add("clickable");
         tr.innerHTML = `
-          <td class="date">${r.date}</td>
+          <td class="date"><span class="d-yr">${r.date.slice(0,5)}</span>${r.date.slice(5)}</td>
           <td class="city">${escapeHtml(r.city)}</td>
-          <td class="cat"><span class="tag${isHot ? " hot" : ""}">${escapeHtml(r.category)}</span></td>
+          <td class="cat" data-city="${escapeAttr(r.city)}"><span class="tag${isHot ? " hot" : ""}">${escapeHtml(r.category)}</span></td>
           <td class="type">${escapeHtml(r.type)}</td>
           <td class="loc">${escapeHtml(r.location || "")}</td>`;
         tr.addEventListener("click", () => openModal(r));
