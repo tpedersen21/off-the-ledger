@@ -2,3 +2,8 @@
   from = "/map"
   to = "/map.html"
   status = 200
+
+[[redirects]]
+  from = "/datacenters"
+  to = "/datacenters.html"
+  status = 200

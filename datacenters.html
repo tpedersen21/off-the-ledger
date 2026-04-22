@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Center Tracker · Off The Ledger</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #f1ebdc;
+  --paper-deep: #e8e0cc;
+  --ink: #16140f;
+  --ink-muted: rgba(22,20,15,0.45);
+  --red: #a51f1c;
+  --rule: rgba(22,20,15,0.12);
+  --header-h: 52px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  height: var(--header-h);
+  background: rgba(22, 20, 15, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(241,235,220,0.12);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+}
+.header-back {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(241,235,220,0.5);
+  text-decoration: none;
+  transition: color 0.12s;
+  white-space: nowrap;
+}
+.header-back:hover { color: #f1ebdc; }
+.header-divider { width: 1px; height: 20px; background: rgba(241,235,220,0.15); }
+.header-logo { height: 36px; width: 36px; object-fit: contain; border-radius: 4px; }
+.header-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(241,235,220,0.6);
+}
+.header-label strong { color: #f1ebdc; font-weight: 500; }
+
+/* ---------- MAP ---------- */
+#map {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0;
+  height: 42vh;
+  z-index: 1;
+}
+
+/* ---------- CONTENT ---------- */
+.content {
+  margin-top: calc(var(--header-h) + 42vh);
+  padding: 0 0 60px;
+}
+
+/* ---------- INTRO ---------- */
+.intro {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--rule);
+  max-width: 860px;
+}
+.intro h1 {
+  font-family: "Fraunces", serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.intro h1 em { font-style: italic; color: var(--red); font-weight: 500; }
+.intro p {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+/* ---------- FILTERS ---------- */
+.filters {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+}
+.filter-btn {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.12s, border-color 0.12s;
+}
+.filter-btn:hover { color: var(--ink); }
+.filter-btn.active { color: var(--red); border-bottom-color: var(--red); }
+
+/* ---------- SUMMARY BAR ---------- */
+.summary-bar {
+  padding: 10px 24px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule);
+}
+.summary-bar strong { color: var(--ink); }
+
+/* ---------- CARDS ---------- */
+.cards { padding: 0; }
+
+.dc-card {
+  border-bottom: 1px solid var(--rule);
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.dc-card:hover { background: rgba(22,20,15,0.03); }
+.dc-card.expanded { background: rgba(22,20,15,0.02); }
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.card-name {
+  font-family: "Fraunces", serif;
+  font-size: 17px;
+  font-weight: 700;
+  flex: 1;
+  min-width: 200px;
+}
+.card-meta {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 3px;
+  flex-basis: 100%;
+}
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.badge-operational  { background: #dcfce7; color: #166534; }
+.badge-under-construction { background: #fef3c7; color: #92400e; }
+.badge-proposed     { background: rgba(22,20,15,0.08); color: var(--ink-muted); }
+.badge-approved     { background: #dbeafe; color: #1d4ed8; }
+.badge-on-hold      { background: #fee2e2; color: #991b1b; }
+
+/* Quick stats row */
+.card-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.stat-item { font-size: 11px; color: var(--ink-muted); }
+.stat-item strong { color: var(--ink); font-weight: 500; }
+
+/* Expanded detail */
+.card-detail {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+.dc-card.expanded .card-detail { display: block; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px 32px;
+}
+.detail-row { font-size: 11px; }
+.detail-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  margin-bottom: 2px;
+}
+.detail-val { color: var(--ink); line-height: 1.5; }
+
+.opposition-note {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(165,31,28,0.06);
+  border-left: 2px solid var(--red);
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.sources-list {
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--ink-muted);
+}
+.sources-list span { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-right: 6px; }
+
+/* ---------- FOOTER NOTE ---------- */
+.footer-note {
+  margin: 32px 24px 0;
+  padding: 16px 20px;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  font-size: 11px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  max-width: 760px;
+}
+.footer-note strong { color: var(--ink); }
+
+/* ---------- POPUP ---------- */
+.mapboxgl-popup-content {
+  background: rgba(22,20,15,0.92) !important;
+  color: #f1ebdc !important;
+  border-radius: 4px !important;
+  padding: 10px 14px !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 11px !important;
+  max-width: 200px !important;
+}
+.mapboxgl-popup-tip { border-top-color: rgba(22,20,15,0.92) !important; }
+.popup-name { font-family: "Fraunces", serif; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.popup-sub { color: rgba(241,235,220,0.6); font-size: 10px; }
+
+/* ---------- MAPBOX CTRL ---------- */
+.mapboxgl-ctrl-group { background: rgba(22,20,15,0.85) !important; border: none !important; }
+.mapboxgl-ctrl-group button { background: transparent !important; }
+.mapboxgl-ctrl-group button span { filter: invert(1); }
+.mapboxgl-ctrl-attrib { background: rgba(22,20,15,0.6) !important; }
+.mapboxgl-ctrl-attrib a { color: rgba(241,235,220,0.5) !important; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-back" href="/">← Ledger</a>
+  <div class="header-divider"></div>
+  <img src="/otl.png" alt="Off The Ledger" class="header-logo">
+  <div class="header-label"><strong>Data Center Tracker</strong> · MN &amp; W. Wisconsin</div>
+</header>
+
+<div id="map"></div>
+
+<div class="content">
+
+  <div class="intro">
+    <h1>Data Center <em>Tracker</em></h1>
+    <p>Proposed, approved, and operational data centers in Minnesota and western Wisconsin counties (St. Croix, Dunn, Eau Claire, Chippewa, Pepin, Pierce, Polk). Entries include MW capacity, water use, utility, permit status, and community opposition where documented.</p>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="proposed">Proposed</button>
+    <button class="filter-btn" data-filter="approved">Approved</button>
+    <button class="filter-btn" data-filter="under-construction">Under Construction</button>
+    <button class="filter-btn" data-filter="operational">Operational</button>
+    <button class="filter-btn" data-filter="on-hold">On Hold</button>
+  </div>
+
+  <div class="summary-bar" id="summaryBar">Loading…</div>
+  <div class="cards" id="cards"></div>
+
+  <div class="footer-note">
+    <strong>Note:</strong> Several smaller colocation facilities in Eagan operate under 20 MW each (Oppidan/Connect, Centra, Swervo) and are not individually mapped. The City of Eagan has a 2026 moratorium on new large data center projects.
+  </div>
+
+</div>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script>
+mapboxgl.accessToken = "pk.eyJ1IjoidHBlZGVyc2VuMjEiLCJhIjoiY21vYWk3Z3NtMDczZzJ5cHRxcTN3dGpkMiJ9.L1Rv7yGHB_7eHUOIUmlNNQ";
+
+const STATUS_COLOR = {
+  "operational":       "#166534",
+  "under-construction":"#92400e",
+  "proposed":          "#64748b",
+  "approved":          "#1d4ed8",
+  "on-hold":           "#a51f1c",
+};
+
+const STATUS_LABEL = {
+  "operational":       "Operational",
+  "under-construction":"Under Construction",
+  "proposed":          "Proposed",
+  "approved":          "Approved / Planned",
+  "on-hold":           "On Hold",
+};
+
+let allData = [];
+let activeFilter = "all";
+
+// Init map
+const map = new mapboxgl.Map({
+  container: "map",
+  style: "mapbox://styles/mapbox/light-v11",
+  center: [-93.2, 45.0],
+  zoom: 6.5,
+  attributionControl: true,
+});
+map.addControl(new mapboxgl.NavigationControl(), "top-right");
+map.scrollZoom.disable();
+
+// Load data
+fetch("/datacenters.json")
+  .then(r => r.json())
+  .then(data => {
+    allData = data;
+    renderAll();
+    addMapMarkers();
+  });
+
+function renderAll() {
+  const filtered = activeFilter === "all"
+    ? allData
+    : allData.filter(d => d.status === activeFilter);
+
+  // Summary bar
+  const totalMW = filtered.filter(d => d.mw).reduce((s, d) => s + d.mw, 0);
+  document.getElementById("summaryBar").innerHTML =
+    `<strong>${filtered.length}</strong> facilities · <strong>${totalMW.toLocaleString()} MW</strong> quantified capacity`;
+
+  // Cards
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+  filtered.forEach(dc => container.appendChild(buildCard(dc)));
+}
+
+function buildCard(dc) {
+  const card = document.createElement("div");
+  card.className = "dc-card";
+  card.id = `card-${dc.id}`;
+
+  const mwStr = dc.mw ? `${dc.mw.toLocaleString()} MW` : (dc.mw_note || "—");
+  const locationStr = `${dc.city}, ${dc.county}, ${dc.state}`;
+
+  card.innerHTML = `
+    <div class="card-top">
+      <div>
+        <div class="card-name">${dc.name}</div>
+        <div class="card-meta">${dc.operator} · ${locationStr}</div>
+      </div>
+      <span class="badge badge-${dc.status}">${STATUS_LABEL[dc.status]}</span>
+    </div>
+    <div class="card-stats">
+      <div class="stat-item"><strong>${mwStr}</strong> capacity</div>
+      <div class="stat-item"><strong>${dc.utility}</strong></div>
+      <div class="stat-item">Announced <strong>${dc.announced}</strong></div>
+      <div class="stat-item">Est. completion <strong>${dc.expected_completion}</strong></div>
+    </div>
+    <div class="card-detail">
+      <div class="detail-grid">
+        <div class="detail-row">
+          <div class="detail-label">Water Use</div>
+          <div class="detail-val">${dc.water_use}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Permit Status</div>
+          <div class="detail-val">${dc.permit_status}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Incentives</div>
+          <div class="detail-val">${dc.incentives}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Address / Site</div>
+          <div class="detail-val">${dc.address}</div>
+        </div>
+      </div>
+      ${dc.opposition && dc.opposition !== "None" && dc.opposition !== "Minimal noted" ? `
+      <div class="opposition-note">⚠ ${dc.opposition}</div>` : ""}
+      <div class="sources-list"><span>Sources:</span>${dc.sources.join(" · ")}</div>
+    </div>`;
+
+  card.addEventListener("click", () => {
+    const wasExpanded = card.classList.contains("expanded");
+    document.querySelectorAll(".dc-card.expanded").forEach(c => c.classList.remove("expanded"));
+    if (!wasExpanded) {
+      card.classList.add("expanded");
+      // Fly map to this marker
+      map.flyTo({ center: [dc.lng, dc.lat], zoom: 10, duration: 800 });
+    }
+  });
+
+  return card;
+}
+
+function addMapMarkers() {
+  const popup = new mapboxgl.Popup({ closeButton: false, offset: 12 });
+
+  allData.forEach(dc => {
+    const el = document.createElement("div");
+    el.style.cssText = `
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: ${STATUS_COLOR[dc.status] || "#64748b"};
+      border: 2px solid rgba(241,235,220,0.9);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      cursor: pointer;
+    `;
+
+    const mwStr = dc.mw ? `${dc.mw.toLocaleString()} MW` : (dc.mw_note || "");
+
+    el.addEventListener("mouseenter", () => {
+      popup.setLngLat([dc.lng, dc.lat])
+        .setHTML(`<div class="popup-name">${dc.name}</div>
+                  <div class="popup-sub">${STATUS_LABEL[dc.status]}${mwStr ? " · " + mwStr : ""}</div>`)
+        .addTo(map);
+    });
+    el.addEventListener("mouseleave", () => popup.remove());
+    el.addEventListener("click", e => {
+      e.stopPropagation();
+      const cardEl = document.getElementById(`card-${dc.id}`);
+      if (cardEl) {
+        document.querySelectorAll(".dc-card.expanded").forEach(c => c.classList.remove("expanded"));
+        cardEl.classList.add("expanded");
+        cardEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    new mapboxgl.Marker({ element: el })
+      .setLngLat([dc.lng, dc.lat])
+      .addTo(map);
+  });
+}
+
+// Filters
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+  activeFilter = btn.dataset.filter;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderAll();
+});
+</script>
+</body>
+</html>
