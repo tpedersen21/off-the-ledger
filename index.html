@@ -627,6 +627,12 @@ section { margin-top: 56px; }
   transition: background 0.12s;
 }
 .modal-btn:hover { background: var(--red); }
+#modalMap {
+  height: 220px;
+  margin: 0 0 24px;
+  border: 1px solid var(--rule);
+}
+#modalMap[hidden] { display: none; }
 
 /* ------------- FILTER PICKER ------------- */
 .picker-overlay {
@@ -1654,6 +1660,7 @@ footer .exclusions {
     <div class="modal-date" id="modalDate"></div>
     <div class="modal-city" id="modalCity"></div>
     <dl class="modal-rows" id="modalRows"></dl>
+    <div id="modalMap" hidden></div>
     <div class="modal-action">
       <p>Get the full report from the Washington County Sheriff's Office. Submit a public records request via NextRequest, referencing the case number above.</p>
       <a class="modal-btn" href="https://washcosheriff.nextrequest.com" target="_blank" rel="noopener">Open NextRequest &rarr;</a>
@@ -2003,6 +2010,83 @@ footer .exclusions {
     window.location.href = url.toString();
   }
 
+  // ---- MAPBOX INCIDENT MAP ----
+  const MAPBOX_TOKEN = "pk.eyJ1IjoidHBlZGVyc2VuMjEiLCJhIjoiY21vYWk3Z3NtMDczZzJ5cHRxcTN3dGpkMiJ9.L1Rv7yGHB_7eHUOIUmlNNQ";
+  const _geoCache = {};
+  let _mapboxReady = null;
+  let _mbMap = null;
+  let _mbMarker = null;
+
+  function loadMapboxGL() {
+    if (_mapboxReady) return _mapboxReady;
+    _mapboxReady = new Promise(resolve => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css";
+      document.head.appendChild(link);
+      const script = document.createElement("script");
+      script.src = "https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js";
+      script.onload = resolve;
+      document.head.appendChild(script);
+    });
+    return _mapboxReady;
+  }
+
+  function parseGeoQuery(location, city) {
+    if (!location || location === "—") return null;
+    const cleaned = location.replace(/[Xx]+/g, m => "0".repeat(m.length));
+    return `${cleaned}, ${city}, MN`;
+  }
+
+  async function geocodeAddr(query) {
+    if (_geoCache[query]) return _geoCache[query];
+    const url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
+      + encodeURIComponent(query)
+      + ".json?access_token=" + MAPBOX_TOKEN
+      + "&country=US&types=address&proximity=-92.81,45.06&limit=1";
+    try {
+      const data = await fetch(url).then(r => r.json());
+      if (data.features && data.features.length) {
+        const coords = data.features[0].center;
+        _geoCache[query] = coords;
+        return coords;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  async function showMapForRow(row) {
+    const mapEl = document.getElementById("modalMap");
+    const query = parseGeoQuery(row.location, row.city);
+    if (!query) { mapEl.hidden = true; return; }
+    mapEl.hidden = false;
+    await loadMapboxGL();
+    requestAnimationFrame(() => {
+      if (!_mbMap) {
+        mapboxgl.accessToken = MAPBOX_TOKEN;
+        _mbMap = new mapboxgl.Map({
+          container: "modalMap",
+          style: "mapbox://styles/mapbox/light-v11",
+          center: [-92.81, 45.06],
+          zoom: 13,
+          attributionControl: false,
+        });
+        _mbMap.addControl(new mapboxgl.AttributionControl({ compact: true }));
+        _mbMarker = new mapboxgl.Marker({ color: "#a51f1c" })
+          .setLngLat([-92.81, 45.06])
+          .addTo(_mbMap);
+      } else {
+        _mbMap.resize();
+      }
+      geocodeAddr(query).then(coords => {
+        if (!coords) return;
+        _mbMarker.setLngLat(coords);
+        const fly = () => _mbMap.flyTo({ center: coords, zoom: 15, duration: 700 });
+        _mbMap.loaded() ? fly() : _mbMap.once("load", fly);
+      });
+    });
+  }
+
   function openModal(row) {
     const dateText = row.date + (row.hour != null ? ` at ${String(row.hour).padStart(2,"0")}:00` : "");
     document.getElementById("modalDate").textContent = dateText;
@@ -2020,6 +2104,7 @@ footer .exclusions {
     });
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
+    showMapForRow(row);
   }
   function closeModal() {
     overlay.hidden = true;
