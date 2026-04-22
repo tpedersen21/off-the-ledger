@@ -2004,6 +2004,24 @@ footer .exclusions {
     });
   });
 
+  // When filtered to a city or category, the Serious/Theft tabs are meaningless —
+  // auto-switch to "Last 7 Days · All" and hide the irrelevant tabs.
+  if (viewMode !== "global") {
+    const recentSec = document.getElementById("sec-recent-tabs");
+    if (recentSec) {
+      recentSec.querySelectorAll(".tab[data-tab='serious'], .tab[data-tab='theft']")
+               .forEach(t => t.style.display = "none");
+      recentSec.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      recentSec.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      const rawTab = recentSec.querySelector(".tab[data-tab='raw']");
+      const rawPanel = recentSec.querySelector(".tab-panel[data-panel='raw']");
+      if (rawTab) rawTab.classList.add("active");
+      if (rawPanel) rawPanel.classList.add("active");
+      const kicker = recentSec.querySelector(".kicker");
+      if (kicker) kicker.textContent = "Last 7 Days";
+    }
+  }
+
   /* ------------- COLLAPSIBLE TIERS ------------- */
   // Default-collapse lower-priority tiers so the top-of-fold shows editorial ones
   const defaultCollapsed = new Set(["Service Calls", "Procedural", "Unclassified", "Other"]);
