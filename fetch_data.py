@@ -802,9 +802,16 @@ def _aggregate_one(rows, ctx):
     recent.sort(key=lambda r: (r["date"], r.get("hour") or 0), reverse=True)
 
     serious_cats_excluding_theft = ctx["serious_cats"] - {"Theft"}
+    _shooting_keywords = ("shots fired", "shots heard", "shooting")
+    def _is_serious(r):
+        if r["category"] in serious_cats_excluding_theft:
+            return True
+        if r["category"] == "Weapons":
+            t = (r.get("type") or "").lower()
+            return any(kw in t for kw in _shooting_keywords)
+        return False
     recent_serious = [r for r in rows
-                      if r["date"] >= ctx["serious_cutoff"]
-                      and r["category"] in serious_cats_excluding_theft]
+                      if r["date"] >= ctx["serious_cutoff"] and _is_serious(r)]
     recent_serious.sort(key=lambda r: (r["date"], r.get("hour") or 0), reverse=True)
 
     recent_theft = [r for r in rows
