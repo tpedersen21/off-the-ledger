@@ -1724,7 +1724,7 @@ footer .exclusions {
   const urlParams = new URLSearchParams(window.location.search);
   const filterCity = urlParams.get("city");
   const filterCategory = urlParams.get("category");
-  const windowParam = urlParams.get("window") || "all";
+  const windowParam = urlParams.get("window") || "2y";
   const availableWindows = (D.windows || {});
   // Start with the windowed base, fall back to full dataset for "all" or if missing
   const windowBase = (windowParam !== "all" && availableWindows[windowParam])
