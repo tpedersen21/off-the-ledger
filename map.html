@@ -244,63 +244,138 @@ map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "bottom
 map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
 map.addControl(new mapboxgl.ScaleControl({ unit: "imperial" }), "bottom-left");
 
+const GEO_CACHE_KEY = "otl_geocache_v1";
+const geoCache = JSON.parse(sessionStorage.getItem(GEO_CACHE_KEY) || "{}");
+
+function addrKey(location, city) {
+  if (!location || location === "—") return null;
+  const cleaned = location.replace(/[Xx]+/g, m => "0".repeat(m.length));
+  return `${cleaned}, ${city}, MN`;
+}
+
+async function geocodeBatch(addrs) {
+  const todo = addrs.filter(a => !geoCache[a]);
+  for (let i = 0; i < todo.length; i += 8) {
+    await Promise.all(todo.slice(i, i + 8).map(async addr => {
+      const url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
+        + encodeURIComponent(addr)
+        + ".json?access_token=" + mapboxgl.accessToken
+        + "&country=US&types=address&proximity=-92.81,45.06&limit=1";
+      try {
+        const d = await fetch(url).then(r => r.json());
+        if (d.features && d.features.length) geoCache[addr] = d.features[0].center;
+      } catch (_) {}
+    }));
+  }
+  try { sessionStorage.setItem(GEO_CACHE_KEY, JSON.stringify(geoCache)); } catch (_) {}
+}
+
+const CAT_COLOR = [
+  "match", ["get", "category"],
+  "Suicide / Suicidal", "#a51f1c",
+  "Domestic Violence",  "#a51f1c",
+  "CPS Referral",       "#a51f1c",
+  "MAARC",              "#a51f1c",
+  "Homicide",           "#6d1412",
+  "Kidnapping",         "#6d1412",
+  "Robbery",            "#6d1412",
+  "Assault",            "#6d1412",
+  "Burglary",           "#6d1412",
+  "Sex Offense",        "#6d1412",
+  "Weapons",            "#b45309",
+  "Drugs",              "#b45309",
+  "DUI",                "#b45309",
+  "#64748b"
+];
+
 map.on("load", () => {
-  // Crime bubbles from pre-aggregated 30-day city counts
-  if (window.CRIME_DATA && CRIME_DATA.windows && CRIME_DATA.windows["30d"]) {
-    const cityData = CRIME_DATA.windows["30d"].byCity || [];
-    const features = cityData
-      .filter(d => CITY_COORDS[d.city])
-      .map(d => ({
-        type: "Feature",
-        geometry: { type: "Point", coordinates: CITY_COORDS[d.city] },
-        properties: { city: d.city, count: d.count },
-      }));
+  if (window.CRIME_DATA) {
+    const recent = (CRIME_DATA.recent || []).filter(r => r.location && r.location !== "—");
+    const uniqueAddrs = [...new Set(recent.map(r => addrKey(r.location, r.city)).filter(Boolean))];
 
-    map.addSource("crimes", { type: "geojson", data: { type: "FeatureCollection", features } });
+    map.addSource("incidents", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] },
+      cluster: true,
+      clusterMaxZoom: 13,
+      clusterRadius: 45,
+    });
 
     map.addLayer({
-      id: "crime-bubbles",
+      id: "clusters",
       type: "circle",
-      source: "crimes",
+      source: "incidents",
+      filter: ["has", "point_count"],
       paint: {
-        "circle-radius": ["interpolate", ["linear"], ["get", "count"],
-          1, 8, 100, 22, 300, 34, 600, 46, 1200, 60],
         "circle-color": "#a51f1c",
-        "circle-opacity": 0.18,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#a51f1c",
-        "circle-stroke-opacity": 0.7,
+        "circle-opacity": 0.8,
+        "circle-radius": ["step", ["get", "point_count"], 14, 5, 20, 15, 28, 40, 36],
       },
     });
-
     map.addLayer({
-      id: "crime-labels",
+      id: "cluster-count",
       type: "symbol",
-      source: "crimes",
+      source: "incidents",
+      filter: ["has", "point_count"],
       layout: {
-        "text-field": ["concat", ["get", "city"], "\n", ["to-string", ["get", "count"]]],
+        "text-field": ["get", "point_count_abbreviated"],
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Regular"],
-        "text-size": 11,
-        "text-anchor": "center",
+        "text-size": 12,
       },
+      paint: { "text-color": "#f1ebdc" },
+    });
+    map.addLayer({
+      id: "incident-dots",
+      type: "circle",
+      source: "incidents",
+      filter: ["!", ["has", "point_count"]],
       paint: {
-        "text-color": "#16140f",
-        "text-halo-color": "#f1ebdc",
-        "text-halo-width": 1.5,
+        "circle-radius": 7,
+        "circle-color": CAT_COLOR,
+        "circle-stroke-width": 1.5,
+        "circle-stroke-color": "#fff",
+        "circle-opacity": 0.9,
       },
     });
 
-    const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
-    map.on("mouseenter", "crime-bubbles", e => {
-      map.getCanvas().style.cursor = "pointer";
-      const { city, count } = e.features[0].properties;
-      popup.setLngLat(e.lngLat)
-        .setHTML(`<div class="popup-category">Last 30 days</div><div class="popup-name">${escHtml(city)}</div><div class="popup-address">${count} incidents</div>`)
+    const dotPopup = new mapboxgl.Popup({ closeButton: true, maxWidth: "260px" });
+    map.on("click", "incident-dots", e => {
+      const p = e.features[0].properties;
+      const time = p.hour != null && p.hour >= 0
+        ? ` at ${String(p.hour).padStart(2,"0")}:00` : "";
+      dotPopup.setLngLat(e.features[0].geometry.coordinates)
+        .setHTML(`
+          <div class="popup-category">${escHtml(p.category)}</div>
+          <div class="popup-name">${escHtml(p.type)}</div>
+          <div class="popup-address">${escHtml(p.location)}<br>${escHtml(p.city)}</div>
+          <div class="popup-address">${p.date}${escHtml(time)}</div>
+          ${p.case ? `<div class="popup-address" style="margin-top:4px;color:#75705f">${escHtml(p.case)}</div>` : ""}
+        `)
         .addTo(map);
     });
-    map.on("mouseleave", "crime-bubbles", () => {
-      map.getCanvas().style.cursor = "";
-      popup.remove();
+    map.on("mouseenter", "incident-dots", () => map.getCanvas().style.cursor = "pointer");
+    map.on("mouseleave", "incident-dots", () => map.getCanvas().style.cursor = "");
+    map.on("click", "clusters", e => {
+      map.easeTo({ center: e.features[0].geometry.coordinates, zoom: map.getZoom() + 2 });
+    });
+
+    geocodeBatch(uniqueAddrs).then(() => {
+      const features = recent.map(r => {
+        const addr = addrKey(r.location, r.city);
+        const coords = addr && geoCache[addr];
+        if (!coords) return null;
+        return {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: coords },
+          properties: {
+            date: r.date, hour: r.hour ?? -1,
+            type: r.type, city: r.city,
+            location: r.location, category: r.category, case: r.case || "",
+          },
+        };
+      }).filter(Boolean);
+      features.sort((a, b) => b.properties.date.localeCompare(a.properties.date));
+      map.getSource("incidents").setData({ type: "FeatureCollection", features });
     });
   }
 
