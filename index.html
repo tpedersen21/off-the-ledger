@@ -149,6 +149,17 @@ main {
 .masthead-nav-btn:last-child { border-right: none; }
 .masthead-nav-btn:hover { background: rgba(22,20,15,0.04); }
 .masthead-nav-btn--dc { color: var(--ink-muted); }
+.masthead-nav-btn--support {
+  flex: none;
+  margin-left: auto;
+  color: var(--ink-muted);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  border-right: none;
+  border-left: 1px solid var(--rule);
+  opacity: 0.7;
+}
+.masthead-nav-btn--support:hover { opacity: 1; }
 .otl-teaser {
   margin: 22px 0 0;
   padding: 14px 16px;
@@ -1527,6 +1538,7 @@ footer .exclusions {
     <nav class="masthead-nav">
       <a href="/map" class="masthead-nav-btn">Crime Map &rarr;</a>
       <a href="/datacenters" class="masthead-nav-btn masthead-nav-btn--dc">Data Centers &rarr;</a>
+      <a href="https://buymeacoffee.com/offtheledger.app" target="_blank" rel="noopener" class="masthead-nav-btn masthead-nav-btn--support">☕ Support</a>
     </nav>
   </header>
 
