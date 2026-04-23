@@ -149,28 +149,17 @@ main {
 .masthead-nav-btn:last-child { border-right: none; }
 .masthead-nav-btn:hover { background: rgba(22,20,15,0.04); }
 .masthead-nav-btn--dc { color: var(--ink-muted); }
-.bmc-badge {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 900;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 9px 14px 9px 11px;
+.masthead-nav-btn--support {
+  flex: none;
+  margin-left: auto;
   background: #FFDD00;
   color: #000;
-  border-radius: 8px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
+  border-left: none;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: transform 0.12s, box-shadow 0.12s;
+  letter-spacing: 0.18em;
+  transition: background 0.12s;
 }
-.bmc-badge:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.bmc-badge .bmc-icon { font-size: 15px; line-height: 1; }
+.masthead-nav-btn--support:hover { background: #f5d400; }
 .otl-teaser {
   margin: 22px 0 0;
   padding: 14px 16px;
@@ -1549,6 +1538,7 @@ footer .exclusions {
     <nav class="masthead-nav">
       <a href="/map" class="masthead-nav-btn">Crime Map &rarr;</a>
       <a href="/datacenters" class="masthead-nav-btn masthead-nav-btn--dc">Data Centers &rarr;</a>
+      <a href="https://buymeacoffee.com/offtheledger.app" target="_blank" rel="noopener" class="masthead-nav-btn masthead-nav-btn--support">Support &rarr;</a>
     </nav>
   </header>
 
@@ -1803,9 +1793,6 @@ footer .exclusions {
 
 </main>
 
-<a href="https://buymeacoffee.com/offtheledger.app" target="_blank" rel="noopener" class="bmc-badge">
-  <span class="bmc-icon">☕</span> Support
-</a>
 
 <!-- Modal for incident details -->
 <div class="modal-overlay" id="modalOverlay" hidden>
