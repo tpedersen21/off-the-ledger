@@ -16,6 +16,10 @@ No external dependencies. Pure Python 3 stdlib.
 """
 
 import csv
+import io
+import xml.etree.ElementTree as ET
+from email.utils import parsedate_to_datetime
+from urllib.parse import urlencode, quote
 import json
 import os
 import re
@@ -27,7 +31,8 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-RMS_INDEX = "https://web1.co.washington.mn.us/MediaReports/RMS/"
+RMS_CONTAINER = "https://storageaccountwc.blob.core.windows.net/sheriffpublicdata"
+RMS_PREFIX = "reports/incidentsummary/"
 HERE = Path(__file__).resolve().parent
 CACHE_DIR = HERE / "cache"
 DATA_JS = HERE / "data.js"
@@ -183,32 +188,60 @@ def log(msg):
 
 
 def list_remote_files():
-    """Scrape the open directory listing to get all CSV filenames."""
-    log("fetching directory listing...")
-    req = urllib.request.Request(RMS_INDEX, headers={"User-Agent": "wc-ledger/1.0"})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        html = resp.read().decode("utf-8", errors="replace")
-    # The listing is plain text inside a <pre>; filenames look like IncidentSummary_YYYYMMDD.csv
-    names = sorted(set(re.findall(r"IncidentSummary_\d{8}\.csv", html)))
-    log(f"found {len(names)} weekly files on server")
-    return names
+    """List the county's public Azure archive, including its rolling latest CSV."""
+    log("fetching county report listing...")
+    files = {}
+    marker = ""
+    while True:
+        query = {"restype": "container", "comp": "list", "prefix": RMS_PREFIX}
+        if marker:
+            query["marker"] = marker
+        req = urllib.request.Request(RMS_CONTAINER + "?" + urlencode(query),
+                                     headers={"User-Agent": "wc-ledger/1.0"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            root = ET.fromstring(resp.read())
+        for blob in root.findall("./Blobs/Blob"):
+            name = blob.findtext("Name", "")
+            filename = name.removeprefix(RMS_PREFIX)
+            if filename == "IncidentSummary.csv":
+                # The latest week may exist only under this rolling filename.
+                # Snapshot it using the county's publication date, so history
+                # survives when the rolling file is replaced next week.
+                modified = parsedate_to_datetime(blob.findtext("./Properties/Last-Modified"))
+                filename = "IncidentSummary_" + modified.strftime("%Y%m%d") + ".csv"
+            elif not re.fullmatch(r"IncidentSummary_\d{8}\.csv", filename):
+                continue
+            files[filename] = RMS_CONTAINER + "/" + quote(name, safe="/")
+        next_marker = root.findtext("NextMarker", "")
+        if not next_marker:
+            break
+        if next_marker == marker:
+            raise ValueError("County report listing repeated a pagination marker")
+        marker = next_marker
+    if not files:
+        raise ValueError("County report listing contains no incident CSVs")
+    log(f"found {len(files)} weekly files on server")
+    return dict(sorted(files.items()))
 
 
-def download(filename):
-    """Download one CSV to cache/ unless it's already there."""
+def download(filename, url):
+    """Download and validate a weekly CSV before adding it to the archive."""
     dest = CACHE_DIR / filename
     if dest.exists() and dest.stat().st_size > 0:
-        return dest, False  # already cached
-    url = RMS_INDEX + filename
+        return dest, False
     req = urllib.request.Request(url, headers={"User-Agent": "wc-ledger/1.0"})
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            data = resp.read()
-        dest.write_bytes(data)
-        return dest, True
-    except urllib.error.URLError as e:
-        log(f"  failed {filename}: {e}")
-        return None, False
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        data = resp.read()
+    reader = csv.reader(io.StringIO(data.decode("utf-8-sig")))
+    headers = next(reader, [])
+    if not {"CreatedOn1", "EventDescription", "CaseNum"}.issubset(headers):
+        raise ValueError(f"Unexpected CSV columns in {filename}; existing data preserved")
+    if next(reader, None) is None:
+        raise ValueError(f"Empty incident report: {filename}")
+    temp = dest.with_suffix(".tmp")
+    temp.write_bytes(data)
+    temp.replace(dest)
+    return dest, True
 
 
 def categorize(incident_type):
@@ -1300,8 +1333,8 @@ def main():
 
     log(f"downloading (cached files will be skipped)...")
     new_count = 0
-    for i, name in enumerate(remote, 1):
-        _, was_new = download(name)
+    for i, (name, url) in enumerate(remote.items(), 1):
+        _, was_new = download(name, url)
         if was_new:
             new_count += 1
             time.sleep(0.4)  # be polite
