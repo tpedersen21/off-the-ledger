@@ -41,6 +41,6 @@ Any pattern story about those topics has to come from MCRO court records (`publi
 
 ## Notes
 
-- Data is pulled from `https://web1.co.washington.mn.us/MediaReports/RMS/`. The county's public docs say four-week rolling, but their directory actually holds everything since September 2022.
+- Data is pulled from `https://storageaccountwc.blob.core.windows.net/sheriffpublicdata`. The county moved reports to Azure Blob Storage in September 2026. The importer lists the incident-summary archive and snapshots the rolling latest report by its publication date. Existing cached history is preserved.
 - All counts are "as reported by the originating agency." The county's own disclaimer: illustrative, not an official crime report, subject to change.
-- If the fetcher fails on a file, it logs and moves on. Re-running picks up any it missed.
+- If a download fails or returns an invalid CSV, the rebuild stops before replacing the published data. Re-running picks up any missing files.
