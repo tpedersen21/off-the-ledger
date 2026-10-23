@@ -1,6 +1,12 @@
 name: Update incident data
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - fetch_data.py
+      - test_fetch_data.py
+      - .github/workflows/update.yml
   schedule:
     - cron: '0 11 * * *'  # 11 AM UTC = 6 AM CDT / 5 AM CST
   workflow_dispatch:       # manual trigger from GitHub Actions tab
@@ -30,6 +36,9 @@ jobs:
           key: csv-cache-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             csv-cache-${{ runner.os }}-
+
+      - name: Test county report importer
+        run: python3 -m unittest -v test_fetch_data.py
 
       - name: Fetch and rebuild data
         run: python3 fetch_data.py
